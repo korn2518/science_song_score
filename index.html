@@ -1,0 +1,1258 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>과학송 경연대회 심사</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --paper: #F1F4F9;
+  --card: #FFFFFF;
+  --ink: #17233F;
+  --ink-2: #56627C;
+  --line: #D3DAE7;
+  --brand: #2848C7;
+  --brand-ink: #FFFFFF;
+  --lv0: #0B8A72;   /* 매우 우수 */
+  --lv1: #2C6FD4;   /* 우수 */
+  --lv2: #C2860A;   /* 보통 */
+  --lv3: #B8503D;   /* 노력 필요 */
+  --gold: #F3B824;
+  --silver: #B4BFD2;
+  --warn-bg: #FFF4D6;
+  --warn-ink: #6B4B00;
+  --stage: #0D1736;
+  --body: "IBM Plex Sans KR", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", "Noto Sans KR", sans-serif;
+  --display: "Black Han Sans", "IBM Plex Sans KR", "Malgun Gothic", "Noto Sans CJK KR", sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 16px/1.55 var(--body); word-break: keep-all; overflow-wrap: anywhere;
+}
+h1, h2, h3, p { margin: 0; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+[hidden] { display: none !important; }
+
+/* 공통 틀 */
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 16px 120px; }
+.wrap.wide { max-width: 1180px; padding-bottom: 64px; }
+.top {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap;
+  padding: 22px 0 16px;
+}
+.top h1 { font-size: 1.375rem; line-height: 1.3; font-weight: 700; }
+.top p { color: var(--ink-2); font-size: .9375rem; }
+.top-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.btn {
+  min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1.5px solid var(--line);
+  background: var(--card); font-weight: 600;
+}
+a.btn { display: inline-flex; align-items: center; text-decoration: none; color: inherit; }
+.btn:hover { border-color: var(--ink-2); }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn[disabled] { opacity: .55; cursor: default; }
+.btn.quiet { border-color: transparent; background: transparent; color: var(--ink-2); padding: 0 10px; }
+.demo-note {
+  background: var(--warn-bg); color: var(--warn-ink); padding: 10px 16px; font-size: .9375rem; text-align: center;
+}
+.alert {
+  background: var(--warn-bg); color: var(--warn-ink); border-radius: 10px; padding: 10px 14px; margin: 10px 0; font-size: .9375rem;
+}
+.alert.err { background: #FDE7E2; color: #7A2414; }
+
+/* 들어가기 */
+.gate { min-height: 100dvh; display: grid; place-items: center; padding: 24px 16px; }
+.gate-card { width: min(420px, 100%); }
+.gate-title, .award .place, .s-grade, .s-label, .s-title, .s-board .g { font-family: var(--display); font-weight: 900; font-synthesis: none; }
+.gate-title { font-size: clamp(2.25rem, 9vw, 3.25rem); line-height: 1.12; letter-spacing: -.01em; }
+.staff { height: 33.5px; margin: 18px 0 26px; background: repeating-linear-gradient(to bottom, var(--ink) 0 1.5px, transparent 1.5px 8px); opacity: .85; position: relative; }
+.staff i { position: absolute; width: 13px; height: 10px; border-radius: 50%; background: var(--brand); transform: rotate(-18deg); }
+.field { display: block; margin-bottom: 14px; }
+.field span { display: block; font-weight: 600; margin-bottom: 6px; }
+.field input, .field textarea, .field select {
+  width: 100%; min-height: 50px; padding: 10px 14px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--card);
+}
+.field textarea { min-height: 84px; resize: vertical; line-height: 1.5; }
+.gate .btn.primary { width: 100%; min-height: 54px; font-size: 1.0625rem; margin-top: 6px; }
+.gate-foot { margin-top: 18px; font-size: .9375rem; color: var(--ink-2); }
+.gate-foot a { color: var(--brand); }
+
+/* 팀 목록 */
+.grades { display: flex; gap: 6px; border-bottom: 1.5px solid var(--line); margin-bottom: 6px; }
+.grades button {
+  flex: 1; min-height: 52px; border: 0; background: none; font-weight: 600; color: var(--ink-2);
+  border-bottom: 3px solid transparent; margin-bottom: -1.5px; border-radius: 6px 6px 0 0;
+}
+.grades button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--brand); }
+.grades button small { display: block; font-weight: 400; font-size: .8125rem; }
+.setlist { list-style: none; margin: 0; padding: 0; }
+.setlist li + li { border-top: 1px solid var(--line); }
+.team {
+  width: 100%; display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center;
+  padding: 14px 4px; border: 0; background: none; text-align: left; min-height: 68px;
+}
+.team:hover { background: #E8EDF6; }
+.no {
+  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none;
+  border: 1.5px solid var(--ink); font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.team b { display: block; font-weight: 600; line-height: 1.35; }
+.team small { color: var(--ink-2); font-size: .875rem; }
+.st { font-size: .875rem; color: var(--ink-2); white-space: nowrap; text-align: right; }
+.st.done { color: var(--lv0); font-weight: 700; }
+.st.done b { display: inline; font-size: 1.25rem; }
+.st.draft, .st.editing { color: var(--lv2); font-weight: 600; }
+.empty { padding: 40px 8px; color: var(--ink-2); text-align: center; }
+.all-done { margin-top: 14px; color: var(--lv0); font-weight: 600; }
+
+/* 채점 */
+.score-top { align-items: center; flex-wrap: nowrap; justify-content: flex-start; padding-bottom: 12px; }
+.score-top .who { display: flex; gap: 12px; align-items: center; min-width: 0; }
+.crit { background: var(--card); border-radius: 14px; padding: 16px; margin-bottom: 12px; border: 1.5px solid transparent; }
+.crit.missing { border-color: var(--lv3); }
+.crit-head { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: baseline; margin-bottom: 12px; }
+.crit-head h3 { font-size: 1.125rem; font-weight: 700; }
+.crit-head .ask { grid-column: 1; color: var(--ink-2); font-size: .9375rem; }
+.pts { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-size: 1rem; color: var(--ink-2); white-space: nowrap; }
+.pts b { font-size: 1.875rem; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.levels { display: grid; gap: 6px; }
+.lv {
+  display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; text-align: left; width: 100%;
+  padding: 10px 12px 10px 14px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--card);
+  border-left: 6px solid var(--c); min-height: 48px;
+}
+.lv0 { --c: var(--lv0); } .lv1 { --c: var(--lv1); } .lv2 { --c: var(--lv2); } .lv3 { --c: var(--lv3); }
+.lv-name { font-weight: 700; }
+.lv-band { color: var(--ink-2); font-size: .875rem; font-variant-numeric: tabular-nums; }
+.lv-desc { grid-column: 1 / -1; font-size: .9375rem; line-height: 1.5; color: var(--ink-2); }
+.lv[aria-pressed="true"] { border-color: var(--c); background: color-mix(in srgb, var(--c) 9%, white); }
+.lv[aria-pressed="true"] .lv-name { color: var(--c); }
+.lv[aria-pressed="true"] .lv-desc { color: var(--ink); }
+.crit.picked .lv[aria-pressed="false"] .lv-desc { display: none; }
+.tune { display: grid; grid-template-columns: 48px 1fr 48px; gap: 12px; align-items: center; margin-top: 14px; }
+.step { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--card); font-size: 1.5rem; line-height: 1; font-weight: 500; }
+.step[disabled] { opacity: .4; cursor: default; }
+.meter { -webkit-appearance: none; appearance: none; width: 100%; height: 14px; border-radius: 7px; background: var(--bands); margin: 0; cursor: pointer; }
+.meter::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); border: 4px solid #fff; box-shadow: 0 0 0 1.5px var(--ink); }
+.meter::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); border: 4px solid #fff; box-shadow: 0 0 0 1.5px var(--ink); }
+.meter.unset::-webkit-slider-thumb { background: #fff; border-color: #fff; box-shadow: 0 0 0 1.5px var(--ink-2); }
+.meter.unset::-moz-range-thumb { background: #fff; box-shadow: 0 0 0 1.5px var(--ink-2); }
+.tune-hint { grid-column: 1 / -1; text-align: center; font-size: .8125rem; color: var(--ink-2); margin-top: -4px; }
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; background: var(--ink); color: #fff;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); z-index: 5;
+}
+.bar-in { max-width: 688px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.sum span { font-size: .875rem; opacity: .75; margin-right: 8px; }
+.sum b { font-size: 2rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sum i { font-style: normal; opacity: .75; }
+.bar .btn.primary { min-height: 50px; padding: 0 22px; background: var(--gold); border-color: var(--gold); color: var(--ink); font-size: 1.0625rem; }
+.toast {
+  position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); background: var(--lv0); color: #fff;
+  padding: 10px 18px; border-radius: 999px; font-weight: 600; z-index: 20; max-width: calc(100% - 32px); text-align: center;
+}
+
+/* 채점 기준표 */
+dialog.sheet { width: min(1040px, calc(100% - 16px)); max-height: calc(100dvh - 16px); border: 0; border-radius: 14px; padding: 0; color: var(--ink); }
+dialog.sheet::backdrop { background: rgba(13, 23, 54, .6); }
+.sheet-head { position: sticky; top: 0; background: var(--card); display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); z-index: 1; }
+.sheet-head h2 { font-size: 1.125rem; }
+.sheet-body { padding: 14px 18px 20px; }
+.scroll-x { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; }
+.rubric { min-width: 820px; font-size: .9375rem; }
+.rubric th, .rubric td { border: 1px solid var(--line); padding: 9px 10px; vertical-align: top; text-align: left; line-height: 1.5; }
+.rubric thead th { color: #fff; text-align: center; }
+.rubric thead th:first-child { background: var(--ink); }
+.rubric .h0 { background: var(--lv0); } .rubric .h1 { background: var(--lv1); } .rubric .h2 { background: var(--lv2); } .rubric .h3 { background: var(--lv3); }
+.rubric tbody th { width: 150px; background: #F5F7FB; }
+.rubric tbody th small { display: block; font-weight: 400; color: var(--ink-2); }
+.rubric td b { display: block; font-variant-numeric: tabular-nums; margin-bottom: 2px; }
+.notes { margin: 14px 0 0; padding-left: 20px; color: var(--ink-2); font-size: .9375rem; }
+
+/* 결과 */
+.grade-block { background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 18px; }
+.grade-block h2 { font-size: 1.375rem; }
+.grade-meta { color: var(--ink-2); font-size: .9375rem; margin-bottom: 14px; }
+.podium { display: grid; grid-template-columns: 1.15fr 1fr; gap: 10px; margin-bottom: 14px; }
+.award { border-radius: 12px; padding: 14px 16px; display: grid; grid-template-columns: auto 1fr auto; gap: 2px 14px; align-items: center; }
+.award.first { background: #FCEBB0; }
+.award.second { background: #E4EAF4; }
+.award .place { grid-row: span 2; font-size: 1.75rem; line-height: 1; }
+.award b { font-size: 1.125rem; line-height: 1.35; }
+.award small { grid-column: 2; color: var(--ink-2); }
+.award .avg { grid-row: 1 / span 2; grid-column: 3; font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.rank th, .rank td, .matrix th, .matrix td { padding: 9px 8px; border-bottom: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rank th, .matrix th { font-size: .8125rem; font-weight: 600; color: var(--ink-2); border-bottom: 1.5px solid var(--ink); vertical-align: bottom; }
+.rank th small { display: block; font-weight: 400; }
+.rank .l, .matrix .l { text-align: left; white-space: normal; }
+.rank td.title b { display: block; font-weight: 600; }
+.rank td.title small { color: var(--ink-2); }
+.rank .total { font-weight: 700; font-size: 1.0625rem; }
+.rank tr.r1 td { background: #FEF6DA; }
+.rank tr.r2 td { background: #F1F4FA; }
+.rank tr.none td { color: var(--ink-2); }
+.rank tbody tr.row { cursor: pointer; }
+.rank tbody tr.row:hover td { box-shadow: inset 0 -2px 0 var(--brand); }
+.rank tr.detail td { background: #F7F9FC; white-space: normal; text-align: left; padding: 10px 14px 14px; }
+.tag { display: inline-block; font-size: .75rem; font-weight: 600; padding: 1px 7px; border-radius: 999px; background: var(--warn-bg); color: var(--warn-ink); margin-left: 6px; vertical-align: 2px; }
+.mini { width: auto; font-size: .875rem; }
+.mini th, .mini td { padding: 4px 12px 4px 0; text-align: right; border: 0; font-variant-numeric: tabular-nums; }
+.mini th { font-weight: 600; color: var(--ink-2); }
+.mini .l { text-align: left; white-space: normal; }
+.sub { margin: 22px 0 8px; font-size: 1rem; }
+.auto { display: inline-flex; align-items: center; gap: 6px; font-size: .9375rem; color: var(--ink-2); min-height: 44px; }
+.print-only { display: none; }
+
+/* 팀 편집 */
+.wrap.wide.manage { padding-bottom: 120px; }
+.set-grid { display: grid; grid-template-columns: 1.1fr .9fr 1.6fr; gap: 0 16px; margin-top: 12px; }
+.set-grid .field { margin-bottom: 0; }
+.set-grid input[readonly] { background: var(--paper); color: var(--ink-2); }
+.m-list { list-style: none; margin: 0; padding: 0; }
+.m-team { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: start; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.m-team .no { margin-top: 2px; }
+.m-fields input { min-height: 44px; padding: 8px 12px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--card); }
+.m-title { width: 100%; font-weight: 600; }
+.m-members { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; align-items: center; }
+.m-mem { width: 9em; }
+.m-note { font-size: .875rem; color: var(--warn-ink); margin-top: 6px; }
+.m-ops { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; max-width: 300px; }
+.step.sm { width: 44px; height: 44px; font-size: 1.125rem; }
+.m-del.sure { color: #7A2414; border-color: #7A2414; text-align: left; min-height: 44px; height: auto; padding: 6px 12px; }
+.m-tools { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.manage-bar .bar-in { max-width: 1148px; }
+.manage-bar #mState { font-size: .9375rem; }
+.bar-btns { display: flex; gap: 8px; align-items: center; }
+.bar .btn.quiet { color: #fff; }
+dialog.sheet.narrow { width: min(620px, calc(100% - 16px)); }
+.p-help { margin-bottom: 14px; color: var(--ink-2); }
+
+/* 발표 화면 */
+.stage {
+  position: fixed; inset: 0; z-index: 50; background: radial-gradient(ellipse 70% 60% at 50% 42%, #24377A 0%, var(--stage) 70%);
+  color: #fff; display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; user-select: none; cursor: pointer;
+}
+.stage-lines { position: absolute; left: 0; right: 0; top: 50%; height: 26vh; transform: translateY(-50%);
+  background: repeating-linear-gradient(to bottom, rgba(255,255,255,.14) 0 2px, transparent 2px 6.5vh); pointer-events: none; }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.stage-top, .stage-foot { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 28px; font-size: 1rem; color: rgba(255,255,255,.7); }
+.stage-top label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.stage-top button { background: none; border: 1.5px solid rgba(255,255,255,.4); color: #fff; border-radius: 8px; min-height: 40px; padding: 0 14px; }
+.stage-mid { position: relative; display: grid; place-items: center; text-align: center; padding: 0 5vw; overflow-y: auto; min-height: 0; }
+.s-grade { font-size: clamp(5rem, 22vw, 17rem); line-height: 1; }
+.s-sub { font-size: clamp(1.25rem, 2.6vw, 2.25rem); color: rgba(255,255,255,.78); margin-top: .6em; }
+.s-label { font-size: clamp(2rem, 5vw, 4.5rem); line-height: 1.1; color: var(--gold); margin-bottom: .35em; }
+.s-label.second { color: var(--silver); }
+.s-title { font-size: clamp(2.75rem, 8.4vw, 9rem); line-height: 1.12; max-width: 15em; text-wrap: balance; }
+.multi .s-title { font-size: clamp(2rem, 5.4vw, 5.5rem); }
+.multi .s-members { font-size: clamp(1.25rem, 2.4vw, 2.1rem); margin-top: .3em; }
+.multi .s-score { margin-top: .15em; }
+.s-title.shuffle { color: rgba(255,255,255,.42); filter: blur(1.5px); }
+.s-members { font-size: clamp(1.5rem, 3.4vw, 3rem); font-weight: 600; margin-top: .55em; }
+.s-score { font-size: clamp(1.125rem, 2.2vw, 2rem); color: rgba(255,255,255,.75); margin-top: .35em; font-variant-numeric: tabular-nums; }
+.s-team + .s-team { margin-top: 5vh; }
+.s-board { display: grid; gap: 4vh; text-align: left; font-size: clamp(1rem, 2vw, 1.9rem); width: min(92vw, 58em); }
+.s-row { display: grid; grid-template-columns: 4.4em 1fr 1fr; gap: 0 1.6em; align-items: start; }
+.s-board .g { font-size: 1.6em; line-height: 1.1; color: #fff; }
+.s-cell + .s-cell { margin-top: .7em; }
+.s-cell em { display: block; font-style: normal; font-weight: 700; font-size: .8em; color: var(--gold); }
+.s-cell em.second { color: var(--silver); }
+.s-cell b { display: block; font-weight: 700; line-height: 1.3; }
+.s-cell small { display: block; color: rgba(255,255,255,.72); font-size: .8em; }
+@media (prefers-reduced-motion: no-preference) {
+  .pop { animation: pop .7s cubic-bezier(.2, 1.5, .4, 1) both; }
+  .pop.late { animation-delay: .35s; }
+  .rise { animation: rise .6s ease-out both; }
+  @keyframes pop { from { transform: scale(.35); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes rise { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+}
+
+@media (max-width: 640px) {
+  .set-grid { grid-template-columns: 1fr; gap: 12px 0; }
+  .m-team { grid-template-columns: 40px 1fr; }
+  .m-ops { grid-column: 2; justify-content: flex-start; max-width: none; }
+  .m-mem { width: calc(50% - 3px); }
+  .rubric { min-width: 0; }
+  .rubric, .rubric tbody, .rubric tr, .rubric th, .rubric td { display: block; }
+  .rubric thead { display: none; }
+  .rubric tr { margin-bottom: 18px; }
+  .rubric tbody th { width: auto; border: 0; background: none; padding: 0 0 6px; font-size: 1.0625rem; }
+  .rubric td { border: 1.5px solid var(--line); border-left: 6px solid var(--c); border-radius: 10px; margin-bottom: 6px; }
+  .rubric td::before { content: attr(data-level); font-weight: 700; color: var(--c); float: right; margin-left: 10px; }
+  .podium { grid-template-columns: 1fr; }
+  .grade-block { padding: 16px 12px; }
+  .hide-s { display: none; }
+}
+
+@media print {
+  @page { size: A4 portrait; margin: 12mm; }
+  body { background: #fff; font-size: 9.5pt; line-height: 1.4; }
+  .no-print, .top-actions, .demo-note, .rank tr.detail, .stage, .toast { display: none !important; }
+  .print-only { display: block; }
+  .wrap.wide { max-width: none; padding: 0; }
+  .top { padding: 0 0 6px; }
+  .top h1 { font-size: 14pt; }
+  .grade-block { padding: 0; border-radius: 0; margin: 0; }
+  .grade-block + .grade-block { break-before: page; }
+  .grade-block h2 { font-size: 13pt; }
+  .grade-meta { margin-bottom: 6px; }
+  .podium { gap: 6px; margin-bottom: 6px; }
+  .award { padding: 6px 12px; }
+  .award .place { font-size: 15pt; } .award b { font-size: 10.5pt; } .award .avg { font-size: 13pt; }
+  .alert { padding: 4px 10px; margin: 4px 0; font-size: 8.5pt; }
+  .rank th, .rank td, .matrix th, .matrix td { padding: 3px 6px; }
+  .rank .total { font-size: 10.5pt; }
+  .rank tbody tr.row { cursor: auto; }
+  .rank tr, .matrix tr { break-inside: avoid; }
+  .sub { margin: 10px 0 2px; font-size: 10pt; }
+  .scroll-x { overflow: visible; }
+  .award, .alert, .tag, .rank tr.r1 td, .rank tr.r2 td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .sign { margin-top: 9mm; display: flex; gap: 12mm; justify-content: flex-end; }
+  .sign span { border-top: 1px solid #000; padding-top: 2mm; min-width: 40mm; text-align: center; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<dialog id="rubricDlg" class="sheet"></dialog>
+<dialog id="pasteDlg" class="sheet narrow"></dialog>
+
+<script>
+/* ============================================================
+   설정: Apps Script 웹앱 주소(…/exec)를 따옴표 안에 넣으세요.
+   비워 두면 "연습 모드"로 열리고 점수가 이 기기에만 저장됩니다.
+   ============================================================ */
+const API_URL = 'https://script.google.com/macros/s/AKfycbwP6lwG6m1d5feqXH_e4gGxfLZvpWvlgXa5_h7CWvyhJGTS1ufZ9eSZNoAyhKpIQeCp/exec';
+
+// Apps Script 프로젝트 안에서 열렸는지 (index.html 을 Code.gs 와 함께 배포한 경우). 그때는 주소 없이 바로 통신합니다.
+const GAS = typeof google !== 'undefined' && !!(google.script && google.script.run);
+const LIVE = GAS || !!API_URL;
+
+/**
+ * 과학송 경연대회 채점 기준(루브릭). 채점 화면, 인쇄용 표, 서버 점수 검증이 모두 이 표를 씁니다.
+ * bands: 수준별 점수 구간 [최저, 최고] — 매우 우수, 우수, 보통, 노력 필요 순.
+ * pick:  수준을 눌렀을 때 먼저 들어가는 점수(채점관이 구간 안에서 조정).
+ */
+var RUBRIC = {
+  levels: ['매우 우수', '우수', '보통', '노력 필요'],
+  criteria: [
+    {
+      id: 'science', name: '과학 개념 정확성', short: '과학', max: 30,
+      ask: '가사에 담긴 과학 개념과 용어가 정확한가',
+      bands: [[27, 30], [21, 26], [15, 20], [0, 14]], pick: [28, 23, 17, 10],
+      desc: [
+        '핵심 개념과 용어가 모두 정확하고, 개념 사이의 관계(원인과 결과, 조건)까지 가사에 담겨 있다. 가사만 들어도 단원의 핵심을 설명할 수 있다.',
+        '핵심 개념은 정확하지만 용어 사용이 일부 어색하거나, 개념을 하나씩 따로 설명하는 데 그친다.',
+        '개념을 나열하는 수준이거나 사소한 오류가 한두 곳 있다. 고른 단원과의 관련은 분명하다.',
+        '뚜렷한 오개념이 있거나, 과학 내용이 거의 드러나지 않는다.'
+      ],
+      student: {
+        goal: '가사만 들어도 배운 내용을 설명할 수 있게',
+        checks: ['핵심 용어를 교과서와 같은 뜻으로 썼다', '개념을 늘어놓지 않고 "왜", "어떻게"를 담았다', '틀린 내용이 없는지 교과서로 다시 확인했다']
+      }
+    },
+    {
+      id: 'creative', name: '창의성과 독창성', short: '창의', max: 25,
+      ask: '개념을 자기만의 방식으로 풀어냈는가',
+      bands: [[23, 25], [18, 22], [13, 17], [0, 12]], pick: [24, 20, 15, 8],
+      desc: [
+        '비유, 이야기, 말놀이 등 자기만의 발상으로 개념을 풀어내 기억에 남는다. 원곡의 특징을 주제에 맞게 재치 있게 살렸다.',
+        '눈에 띄는 표현이나 구성이 몇 군데 있으나, 곡 전체로 이어지지는 않는다.',
+        '교과서 문장을 멜로디에 맞춰 옮긴 부분이 대부분이다.',
+        '원곡 가사를 거의 그대로 두었거나, 다른 작품과 구별되는 점을 찾기 어렵다.'
+      ],
+      student: {
+        goal: '우리 팀만의 비유와 이야기로',
+        checks: ['교과서 문장을 그대로 옮기지 않고 우리 말로 바꿨다', '비유, 이야기, 말놀이 가운데 하나 이상을 넣었다', '원곡의 재미있는 부분을 주제에 맞게 살렸다']
+      }
+    },
+    {
+      id: 'music', name: '음악 완성도', short: '음악', max: 20,
+      ask: '가사와 멜로디가 잘 맞고 노래가 안정적인가',
+      bands: [[18, 20], [14, 17], [10, 13], [0, 9]], pick: [19, 15, 11, 6],
+      desc: [
+        '가사의 글자 수와 강세가 멜로디에 자연스럽게 맞고, 음정과 박자가 안정적이다. 가사가 또렷하게 들린다.',
+        '전체적으로 안정적이나, 가사가 멜로디에 어색하게 얹힌 곳이나 음정·박자가 흔들리는 곳이 일부 있다.',
+        '음정·박자가 자주 흔들리거나, 가사가 잘 들리지 않는 구간이 여러 곳 있다.',
+        '노래가 끝까지 이어지지 않거나, 가사를 알아듣기 어렵다.'
+      ],
+      student: {
+        goal: '가사가 또렷이 들리게',
+        checks: ['가사 글자 수가 멜로디에 맞는다', '음정과 박자를 맞춰 끝까지 불렀다', '반주에 목소리가 묻히지 않는다']
+      }
+    },
+    {
+      id: 'video', name: '영상 완성도', short: '영상', max: 15,
+      ask: '영상이 가사의 과학 내용을 잘 보여 주는가',
+      bands: [[14, 15], [11, 13], [8, 10], [0, 7]], pick: [14, 12, 9, 5],
+      desc: [
+        '장면이 가사의 과학 내용을 그림, 실험, 연기 등으로 보여 주어 이해를 돕는다. 자막, 화질, 음량, 편집이 고르다.',
+        '영상이 가사와 대체로 어울리나, 과학 내용을 보여 주는 장면이 일부에 그치거나 자막·음량 등 편집에 아쉬운 곳이 있다.',
+        '가사와 관계가 약한 장면이 많거나, 자막이 없고 화면·음량이 고르지 않아 보기에 불편하다.',
+        '영상이 완성되지 않았거나, 화면과 소리를 알아보기 어렵다.'
+      ],
+      student: {
+        goal: '화면이 가사를 설명해 주게',
+        checks: ['장면이 가사의 과학 내용을 보여 준다', '가사 자막을 넣었다', '소리 크기와 화면이 처음부터 끝까지 고르다']
+      }
+    },
+    {
+      id: 'delivery', name: '전달력과 협동', short: '전달', max: 10,
+      ask: '두 사람이 함께 만들어 자신 있게 전달하는가',
+      bands: [[9, 10], [7, 8], [5, 6], [0, 4]], pick: [9, 7, 5, 3],
+      desc: [
+        '두 사람의 역할이 고르게 드러나고, 자신 있는 목소리와 표현으로 내용을 끝까지 전달한다.',
+        '두 사람이 모두 참여했으나 한 사람의 비중이 크거나, 전달이 약해지는 구간이 있다.',
+        '한 사람이 대부분을 맡았거나, 소극적이어서 내용이 잘 전달되지 않는다.',
+        '한 사람의 참여를 확인하기 어렵다.'
+      ],
+      student: {
+        goal: '둘이 함께, 자신 있게',
+        checks: ['두 사람이 모두 노래나 영상에 나온다', '역할을 고르게 나눴다', '자신 있는 목소리로 끝까지 불렀다']
+      }
+    }
+  ],
+  notes: [
+    '수준을 먼저 고른 뒤, 그 구간 안에서 점수를 정합니다. 점수는 정수로 줍니다.',
+    '뚜렷한 오개념이 하나라도 있으면 과학 개념 정확성은 "보통" 이하로 채점합니다.',
+    '원곡과 멜로디 출처를 밝히지 않은 작품은 창의성과 독창성을 "보통" 이하로 채점합니다.',
+    '최종 점수는 채점한 심사위원들의 총점 평균입니다. 동점이면 과학 개념 정확성 평균, 그다음 창의성과 독창성 평균이 높은 팀이 앞서고, 그래도 같으면 공동 순위입니다.'
+  ]
+};
+
+/**
+ * 심사 집계. 채점 페이지(브라우저)와 Apps Script 서버가 같은 코드를 씁니다.
+ * roster:  [{id, grade, order, members, title}]
+ * records: [{team(팀 ID), judge, scores:[정수 5개], comment, at}]
+ * 팀 점수 = 그 팀을 채점한 사람들의 총점 평균.
+ * 동점 = 과학 개념 정확성(첫 항목) 평균 -> 창의성과 독창성(둘째 항목) 평균 -> 공동 순위.
+ */
+function aggregate(roster, records, criteria) {
+  function norm(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
+  // 팀은 고유 ID로 찾고, ID가 없는 옛 자료만 학년-순서로 찾는다
+  function has(v) { return v != null && String(v) !== ''; }
+  function teamKey(t) { return has(t.id) ? String(t.id) : Number(t.grade) + '-' + Number(t.order); }
+  function recKey(r) { return has(r.team) ? String(r.team) : Number(r.grade) + '-' + Number(r.order); }
+  function sum(a) { var s = 0; for (var i = 0; i < a.length; i++) s += a[i]; return s; }
+  // 분수 a.s/a.n 과 b.s/b.n 을 정수 곱으로 비교 (반올림 오차 없음)
+  function frac(as, an, bs, bn) { return bs * an - as * bn; }
+
+  var teams = {}, order = [];
+  roster.forEach(function (t) {
+    var k = teamKey(t);
+    if (teams[k]) return;
+    teams[k] = { key: k, id: k, grade: Number(t.grade), order: Number(t.order), members: norm(t.members),
+      title: norm(t.title), judgeMap: {} };
+    order.push(k);
+  });
+
+  var orphans = 0, judgeStat = {};
+  records.forEach(function (r, idx) {
+    var t = teams[recKey(r)], name = norm(r.judge);
+    if (!t || !name) { orphans++; return; }
+    var scores = criteria.map(function (c, i) { return Number(r.scores[i]) || 0; });
+    var cur = { judge: name, scores: scores, total: sum(scores), comment: norm(r.comment),
+      at: String(r.at || ''), idx: idx };
+    var prev = t.judgeMap[name];
+    if (!prev || cur.at > prev.at || (cur.at === prev.at && cur.idx > prev.idx)) t.judgeMap[name] = cur;
+  });
+
+  var grades = {};
+  order.forEach(function (k) {
+    var t = teams[k];
+    var js = Object.keys(t.judgeMap).sort().map(function (n) { return t.judgeMap[n]; });
+    js.forEach(function (j) {
+      delete j.idx;
+      var st = judgeStat[j.judge] || (judgeStat[j.judge] = { judge: j.judge, counts: {}, total: 0 });
+      st.counts[t.grade] = (st.counts[t.grade] || 0) + 1; st.total++;
+    });
+    delete t.judgeMap;
+    t.judges = js; t.n = js.length;
+    t.critSum = criteria.map(function (c, i) { return sum(js.map(function (j) { return j.scores[i]; })); });
+    t.totalSum = sum(t.critSum);
+    t.critAvg = t.n ? t.critSum.map(function (s) { return s / t.n; }) : criteria.map(function () { return null; });
+    t.totalAvg = t.n ? t.totalSum / t.n : null;
+    t.rank = null; t.award = ''; t.fewJudges = false;
+    var g = grades[t.grade] || (grades[t.grade] = { grade: t.grade, teams: [], maxJudges: 0, hasTie: false, scored: 0 });
+    g.teams.push(t);
+  });
+
+  function cmp(a, b) {
+    return frac(a.totalSum, a.n, b.totalSum, b.n) ||
+      frac(a.critSum[0], a.n, b.critSum[0], b.n) ||
+      frac(a.critSum[1], a.n, b.critSum[1], b.n);
+  }
+
+  Object.keys(grades).forEach(function (gk) {
+    var g = grades[gk];
+    var ranked = g.teams.filter(function (t) { return t.n > 0; });
+    var rest = g.teams.filter(function (t) { return t.n === 0; });
+    ranked.sort(function (a, b) { return cmp(a, b) || a.order - b.order; });
+    rest.sort(function (a, b) { return a.order - b.order; });
+    g.scored = ranked.length;
+    ranked.forEach(function (t, i) {
+      t.rank = (i > 0 && cmp(ranked[i - 1], t) === 0) ? ranked[i - 1].rank : i + 1;
+      if (t.n > g.maxJudges) g.maxJudges = t.n;
+    });
+    var count = {};
+    ranked.forEach(function (t) { count[t.rank] = (count[t.rank] || 0) + 1; });
+    ranked.forEach(function (t) {
+      t.fewJudges = t.n < g.maxJudges;
+      t.tied = count[t.rank] > 1;
+      if (t.rank <= 2) t.award = (t.tied ? '공동 ' : '') + t.rank + '등';
+      if (t.tied && t.rank <= 2) g.hasTie = true;
+    });
+    g.teams = ranked.concat(rest);
+  });
+
+  var judges = Object.keys(judgeStat).sort().map(function (n) { return judgeStat[n]; });
+  return { grades: grades, judges: judges, orphans: orphans };
+}
+
+const C = RUBRIC.criteria;
+const MAX_TOTAL = C.reduce((s, c) => s + c.max, 0);
+const app = document.getElementById('app');
+const $ = (sel, el) => (el || document).querySelector(sel);
+const $$ = (sel, el) => Array.from((el || document).querySelectorAll(sel));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+const keyOf = t => (t.id != null && t.id !== '') ? String(t.id) : t.grade + '-' + t.order;          // 팀
+const recKey = r => (r.team != null && r.team !== '') ? String(r.team) : r.grade + '-' + r.order;   // 그 팀의 채점 기록
+const cleanName = s => String(s || '').replace(/\s+/g, ' ').trim().slice(0, 20);
+const f2 = v => v == null ? '–' : v.toFixed(2);
+const f1 = v => v == null ? '–' : v.toFixed(1);
+
+const S = {
+  title: '과학송 경연대회', judge: '', code: '', roster: [], mine: {}, drafts: {},
+  grade: null, team: null, work: null, busy: false,
+  admin: { code: '', data: null, agg: null, at: '', timer: 0, open: {} },
+  manage: null
+};
+
+/* ---------- 서버 통신 ---------- */
+
+async function api(action, data) {
+  if (GAS) return gasApi(action, data || {});
+  if (!API_URL) return demoApi(action, data || {});
+  const payload = Object.assign({ action }, data);
+  try {
+    const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload), redirect: 'follow' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  } catch (e) {
+    return jsonp(action, data);   // 일부 환경에서 fetch 가 막히면 같은 요청을 스크립트 방식으로 다시 보냅니다
+  }
+}
+
+function gasApi(action, data) {
+  return new Promise((resolve, reject) => {
+    google.script.run
+      .withSuccessHandler(text => { try { resolve(JSON.parse(text)); } catch (e) { reject(new Error('심사 서버의 응답을 읽지 못했습니다. 다시 해 주세요.')); } })
+      .withFailureHandler(err => reject(new Error('심사 서버에 연결하지 못했습니다. 인터넷 연결을 확인하고 다시 해 주세요.' + (err && err.message ? ' (' + err.message + ')' : ''))))
+      .api(JSON.stringify(Object.assign({ action }, data)));
+  });
+}
+
+function jsonp(action, data) {
+  return new Promise((resolve, reject) => {
+    const cb = 'ssj_' + Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36);
+    const s = document.createElement('script');
+    const done = () => { clearTimeout(timer); delete window[cb]; s.remove(); };
+    const fail = () => { done(); reject(new Error('심사 서버에 연결하지 못했습니다. 인터넷 연결을 확인하고 다시 해 주세요.')); };
+    const timer = setTimeout(fail, 20000);
+    window[cb] = out => { done(); resolve(out); };
+    s.onerror = fail;
+    s.src = API_URL + '?action=' + encodeURIComponent(action) + '&callback=' + cb + '&payload=' + encodeURIComponent(JSON.stringify(data || {}));
+    document.head.appendChild(s);
+  });
+}
+
+/* 연습 모드: 서버 없이 같은 흐름을 이 기기 안에서 흉내 냅니다 */
+const DEMO = {
+  title: '2026 과학송 경연대회', judgeCode: '0000', adminCode: 'admin',
+  roster: [
+    [1, 1, '김가람, 이나래', '판이 움직여요'], [1, 2, '박다온, 최라희', '광합성 레시피'], [1, 3, '정마루, 한바다', '물질의 세 가지 상태'],
+    [1, 4, '오사랑, 윤아름', '빛의 삼원색 송'], [1, 5, '강자람, 서차니', '지구계 한 바퀴'],
+    [2, 1, '임가온, 조나은', '전류가 흐르는 길'], [2, 2, '신다솜, 권라온', '소화 여행'], [2, 3, '황마음, 안바름', '원소 기호 랩'],
+    [2, 4, '송새봄, 류아라', '별까지의 거리'], [2, 5, '전재이, 홍채운', '호흡과 배설 왈츠'],
+    [3, 1, '고가은, 문나길', '멘델의 완두콩'], [3, 2, '양다래, 손로하', '이온이 만나면'], [3, 3, '배미르, 백보라', '운동과 에너지'],
+    [3, 4, '허새론, 남아진', '태양계 순례'], [3, 5, '심재하, 노초롱', '세포 분열 블루스']
+  ].map(r => ({ id: r[0] + '-' + r[1], grade: r[0], order: r[1], members: r[2], title: r[3] }))
+};
+const demoCfg = () => store.get('ssj.demo.config', { title: DEMO.title, judgeCode: DEMO.judgeCode });
+const demoRoster = () => store.get('ssj.demo.roster', DEMO.roster);
+function demoApi(action, d) {
+  return new Promise(resolve => setTimeout(() => {
+    const recs = store.get('ssj.demo.records', []), cfg = demoCfg(), roster = demoRoster();
+    const bad = msg => resolve({ ok: false, code: 'BAD_CODE', error: msg });
+    const code = String(d.code == null ? '' : d.code).trim();
+    if (action === 'roster') {
+      if (code !== cfg.judgeCode) return bad('심사 코드가 맞지 않습니다.');
+      return resolve({ ok: true, title: cfg.title, roster, mine: recs.filter(r => r.judge === cleanName(d.judge)) });
+    }
+    if (action === 'submit') {
+      if (code !== cfg.judgeCode) return bad('심사 코드가 맞지 않습니다.');
+      const t = roster.find(x => x.id === d.team);
+      if (!t) return resolve({ ok: false, code: 'NO_TEAM', error: '순서표에 없는 팀입니다. 화면을 새로 고친 뒤 다시 해 주세요.' });
+      const rec = { team: t.id, grade: t.grade, order: t.order, judge: cleanName(d.judge), scores: d.scores.map(Number), comment: String(d.comment || '').trim(), at: new Date().toISOString() };
+      const i = recs.findIndex(r => recKey(r) === rec.team && r.judge === rec.judge);
+      if (i >= 0) recs[i] = rec; else recs.push(rec);
+      store.set('ssj.demo.records', recs);
+      return resolve({ ok: true, updated: i >= 0, record: rec });
+    }
+    if (action === 'results' || action === 'saveRoster') {
+      if (code !== DEMO.adminCode) return bad('관리자 코드가 맞지 않습니다.');
+      if (action === 'results') return resolve({ ok: true, title: cfg.title, judgeCode: cfg.judgeCode, roster, records: recs, at: new Date().toISOString() });
+      if (d.judgeCode === DEMO.adminCode) return resolve({ ok: false, code: 'BAD_CONFIG', error: '심사 코드는 관리자 코드와 달라야 합니다.' });
+      const seen = {}, count = {};
+      const next = d.roster.map(t => {
+        let id = t.id;
+        while (!id || seen[id]) id = 't' + Math.random().toString(36).slice(2, 8);
+        seen[id] = true; count[t.grade] = (count[t.grade] || 0) + 1;
+        return { id, grade: t.grade, order: count[t.grade], members: t.members, title: t.title };
+      }).sort((x, y) => x.grade - y.grade || x.order - y.order);
+      store.set('ssj.demo.roster', next); store.set('ssj.demo.config', { title: d.title, judgeCode: d.judgeCode });
+      return resolve({ ok: true, title: d.title, judgeCode: d.judgeCode, roster: next });
+    }
+    resolve({ ok: false, error: '알 수 없는 요청입니다.' });
+  }, 180));
+}
+
+/* ---------- 작은 도구 ---------- */
+
+function toast(msg) {
+  const el = $('#toast');
+  el.textContent = msg; el.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => { el.hidden = true; }, 2600);
+}
+function demoNote() {
+  return LIVE ? '' : '<div class="demo-note no-print">연습 모드입니다. 점수와 팀 목록은 이 기기에만 저장됩니다. 심사 코드 <b>' + esc(demoCfg().judgeCode) + '</b>, 관리자 코드 <b>admin</b></div>';
+}
+function levelOf(c, score) {
+  if (score == null) return -1;
+  for (let i = 0; i < c.bands.length; i++) if (score >= c.bands[i][0] && score <= c.bands[i][1]) return i;
+  return -1;
+}
+function bandGradient(c) {
+  const cols = ['var(--lv3)', 'var(--lv2)', 'var(--lv1)', 'var(--lv0)'];
+  const bands = c.bands.slice().reverse();
+  let from = 0;
+  return 'linear-gradient(90deg,' + bands.map((b, i) => {
+    const to = i === bands.length - 1 ? 100 : (b[1] + .5) / c.max * 100;
+    const stop = cols[i] + ' ' + from + '% ' + to + '%';
+    from = to; return stop;
+  }).join(',') + ')';
+}
+function totalOf(scores) { return scores.reduce((s, v) => s + (v || 0), 0); }
+function statusOf(t) {
+  const k = keyOf(t);
+  if (S.drafts[k]) return S.mine[k] ? 'editing' : 'draft';
+  return S.mine[k] ? 'done' : 'none';
+}
+function saveDrafts() { store.set('ssj.drafts.' + S.judge, S.drafts); }
+function gradesOf(roster) { return Array.from(new Set(roster.map(t => t.grade))).sort((a, b) => a - b); }
+
+/* ---------- 채점 기준표 ---------- */
+
+function rubricTable() {
+  return '<div class="scroll-x"><table class="rubric"><thead><tr><th>평가 항목</th>' +
+    RUBRIC.levels.map((l, i) => '<th class="h' + i + '">' + esc(l) + '</th>').join('') + '</tr></thead><tbody>' +
+    C.map(c => '<tr><th>' + esc(c.name) + ' <span class="num">(' + c.max + '점)</span><small>' + esc(c.ask) + '</small></th>' +
+      c.desc.map((d, i) => '<td class="lv' + i + '" data-level="' + esc(RUBRIC.levels[i]) + '"><b>' + c.bands[i][0] + '–' + c.bands[i][1] + '점</b>' + esc(d) + '</td>').join('') + '</tr>').join('') +
+    '</tbody></table></div><ul class="notes">' + RUBRIC.notes.map(n => '<li>' + esc(n) + '</li>').join('') + '</ul>';
+}
+function openRubric() {
+  const d = $('#rubricDlg');
+  d.innerHTML = '<div class="sheet-head"><h2>채점 기준표</h2><button class="btn" id="closeRubric">닫기</button></div><div class="sheet-body">' + rubricTable() + '</div>';
+  $('#closeRubric', d).onclick = () => d.close();
+  d.showModal();
+}
+
+/* ---------- 채점관: 들어가기 ---------- */
+
+function viewGate(err) {
+  app.innerHTML = demoNote() + '<div class="gate"><form class="gate-card" id="gateForm">' +
+    '<h1 class="gate-title">과학송<br>경연대회 심사</h1>' +
+    '<div class="staff" aria-hidden="true"><i style="left:8%;top:21px"></i><i style="left:27%;top:5px"></i><i style="left:46%;top:13px"></i><i style="left:65%;top:-3px"></i><i style="left:84%;top:13px"></i></div>' +
+    (err ? '<div class="alert err" role="alert">' + esc(err) + '</div>' : '') +
+    '<label class="field"><span>채점관 이름</span><input id="gName" autocomplete="name" maxlength="20" required value="' + esc(S.judge) + '"></label>' +
+    '<label class="field"><span>심사 코드</span><input id="gCode" inputmode="numeric" autocomplete="off" required value="' + esc(S.code) + '"></label>' +
+    '<button class="btn primary" id="gGo">채점 시작</button>' +
+    '<p class="gate-foot">매번 같은 이름으로 들어와야 앞서 낸 점수를 고칠 수 있습니다. <a href="#result">결과 보기(관리자)</a></p>' +
+    '</form></div>';
+  $('#gateForm').onsubmit = e => { e.preventDefault(); enterJudge(cleanName($('#gName').value), $('#gCode').value.trim()); };
+}
+
+async function enterJudge(judge, code, silent) {
+  if (!judge || !code) return viewGate('이름과 심사 코드를 모두 입력해 주세요.');
+  S.judge = judge; S.code = code;
+  const btn = $('#gGo'); if (btn) { btn.disabled = true; btn.textContent = '확인하는 중'; }
+  let out;
+  try { out = await api('roster', { judge, code }); }
+  catch (e) { return viewGate(e.message); }
+  if (!out.ok) { if (out.code === 'BAD_CODE') { S.code = ''; store.del('ssj.session'); } return viewGate(silent && out.code === 'BAD_CODE' ? '' : out.error); }
+  store.set('ssj.session', { judge, code });
+  S.title = out.title || S.title; S.roster = out.roster || [];
+  S.mine = {}; (out.mine || []).forEach(r => { S.mine[recKey(r)] = r; });
+  S.drafts = store.get('ssj.drafts.' + judge, {});
+  const gs = gradesOf(S.roster);
+  if (gs.indexOf(S.grade) < 0) S.grade = gs[0] || null;
+  viewList();
+}
+
+/* ---------- 채점관: 팀 목록 ---------- */
+
+function viewList() {
+  S.team = null;
+  const gs = gradesOf(S.roster);
+  const teams = S.roster.filter(t => t.grade === S.grade);
+  const doneIn = g => S.roster.filter(t => t.grade === g && S.mine[keyOf(t)]).length;
+  const countIn = g => S.roster.filter(t => t.grade === g).length;
+  const stText = t => {
+    const st = statusOf(t), m = S.mine[keyOf(t)];
+    if (st === 'done') return '<span class="st done"><b class="num">' + totalOf(m.scores) + '</b>점 제출</span>';
+    if (st === 'editing') return '<span class="st editing">고치는 중<br><small>제출한 점수 ' + totalOf(m.scores) + '</small></span>';
+    if (st === 'draft') return '<span class="st draft">작성 중</span>';
+    return '<span class="st">채점 전</span>';
+  };
+  app.innerHTML = demoNote() + '<div class="wrap">' +
+    '<header class="top"><div><h1>' + esc(S.title) + '</h1><p>채점관 ' + esc(S.judge) + '</p></div>' +
+    '<div class="top-actions"><button class="btn" id="openRubric">채점 기준표</button><button class="btn quiet" id="logout">나가기</button></div></header>' +
+    (gs.length ? '<nav class="grades" role="tablist" aria-label="학년">' + gs.map(g =>
+      '<button role="tab" aria-selected="' + (g === S.grade) + '" data-g="' + g + '">' + g + '학년<small class="num">' + doneIn(g) + ' / ' + countIn(g) + '팀</small></button>').join('') + '</nav>' +
+      '<ol class="setlist">' + teams.map(t =>
+        '<li><button class="team" data-k="' + keyOf(t) + '"><span class="no">' + t.order + '</span><span><b>' + esc(t.title || '(제목 없음)') + '</b><small>' + esc(t.members) + '</small></span>' + stText(t) + '</button></li>').join('') + '</ol>' +
+      (teams.length && doneIn(S.grade) === teams.length ? '<p class="all-done">' + S.grade + '학년 ' + teams.length + '팀을 모두 채점했습니다.</p>' : '')
+      : '<p class="empty">아직 등록된 팀이 없습니다. 진행 선생님이 팀을 넣은 뒤 이 화면을 새로 고쳐 주세요.</p>') +
+    '</div>';
+  $('#openRubric').onclick = openRubric;
+  $('#logout').onclick = () => { store.del('ssj.session'); S.code = ''; viewGate(); };
+  $$('.grades button').forEach(b => { b.onclick = () => { S.grade = Number(b.dataset.g); viewList(); }; });
+  $$('.team').forEach(b => { b.onclick = () => openTeam(b.dataset.k); });
+  window.scrollTo(0, 0);
+}
+
+/* ---------- 채점관: 채점 ---------- */
+
+function openTeam(k) {
+  const t = S.roster.find(x => keyOf(x) === k);
+  if (!t) return viewList();
+  S.team = t;
+  const d = S.drafts[k], m = S.mine[k];
+  S.work = d ? { scores: d.scores.slice(), comment: d.comment || '' }
+    : m ? { scores: m.scores.slice(), comment: m.comment || '' }
+    : { scores: C.map(() => null), comment: '' };
+  viewScore();
+}
+
+function viewScore() {
+  const t = S.team, k = keyOf(t), was = !!S.mine[k];
+  app.innerHTML = demoNote() + '<div class="wrap">' +
+    '<header class="top score-top"><button class="btn quiet" id="back" aria-label="팀 목록으로">‹ 목록</button>' +
+    '<div class="who"><span class="no">' + t.order + '</span><div><h1>' + esc(t.title || '(제목 없음)') + '</h1><p>' + t.grade + '학년 ' + esc(t.members) + '</p></div></div></header>' +
+    '<div id="scoreErr"></div>' +
+    C.map((c, i) => '<section class="crit" data-i="' + i + '" aria-labelledby="ch' + i + '">' +
+      '<div class="crit-head"><h3 id="ch' + i + '">' + esc(c.name) + '</h3><p class="ask">' + esc(c.ask) + '</p>' +
+      '<p class="pts"><b class="num" data-pts>–</b> / ' + c.max + '</p></div>' +
+      '<div class="levels">' + RUBRIC.levels.map((l, j) =>
+        '<button type="button" class="lv lv' + j + '" data-j="' + j + '" aria-pressed="false"><span class="lv-name">' + esc(l) + '</span><span class="lv-band">' + c.bands[j][0] + '–' + c.bands[j][1] + '점</span><span class="lv-desc">' + esc(c.desc[j]) + '</span></button>').join('') + '</div>' +
+      '<div class="tune"><button type="button" class="step" data-d="-1" aria-label="' + esc(c.name) + ' 1점 내리기">−</button>' +
+      '<input type="range" class="meter" min="0" max="' + c.max + '" step="1" value="0" aria-label="' + esc(c.name) + ' 점수" style="--bands:' + bandGradient(c) + '">' +
+      '<button type="button" class="step" data-d="1" aria-label="' + esc(c.name) + ' 1점 올리기">+</button>' +
+      '<p class="tune-hint" data-hint>수준을 고르면 점수가 들어갑니다</p></div></section>').join('') +
+    '<label class="field"><span>한줄평 (선택)</span><textarea id="comment" maxlength="300" placeholder="좋았던 점이나 아쉬운 점">' + esc(S.work.comment) + '</textarea></label>' +
+    '</div><footer class="bar"><div class="bar-in"><p class="sum"><span>총점</span><b id="sum" class="num">–</b> <i>/ ' + MAX_TOTAL + '</i></p>' +
+    '<button class="btn primary" id="submit">' + (was ? '고친 점수 제출' : '점수 제출') + '</button></div></footer>';
+
+  $('#back').onclick = viewList;
+  $('#comment').oninput = e => { S.work.comment = e.target.value; keepDraft(); };
+  $$('.crit').forEach(sec => {
+    const i = Number(sec.dataset.i), c = C[i];
+    $$('.lv', sec).forEach(b => { b.onclick = () => setScore(i, c.pick[Number(b.dataset.j)]); });
+    $$('.step', sec).forEach(b => { b.onclick = () => setScore(i, S.work.scores[i] + Number(b.dataset.d)); });
+    $('.meter', sec).oninput = e => setScore(i, Number(e.target.value));
+    paintCrit(i);
+  });
+  paintTotal();
+  $('#submit').onclick = submitScore;
+  window.scrollTo(0, 0);
+}
+
+function setScore(i, v) {
+  const c = C[i];
+  S.work.scores[i] = Math.max(0, Math.min(c.max, Math.round(v)));
+  paintCrit(i); paintTotal(); keepDraft();
+}
+
+function keepDraft() {
+  const k = keyOf(S.team), m = S.mine[k], w = S.work;
+  const blank = w.scores.every(v => v == null) && !w.comment.trim();
+  const same = m && w.scores.every((v, i) => v === m.scores[i]) && w.comment.trim() === (m.comment || '');
+  if (blank || same) delete S.drafts[k]; else S.drafts[k] = { scores: w.scores.slice(), comment: w.comment };
+  saveDrafts();
+}
+
+function paintCrit(i) {
+  const sec = $('.crit[data-i="' + i + '"]'), c = C[i], v = S.work.scores[i], lv = levelOf(c, v);
+  $('[data-pts]', sec).textContent = v == null ? '–' : v;
+  $$('.lv', sec).forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.j) === lv)));
+  sec.classList.toggle('picked', v != null);
+  if (v != null) sec.classList.remove('missing');
+  const meter = $('.meter', sec);
+  meter.classList.toggle('unset', v == null);
+  if (v != null && Number(meter.value) !== v) meter.value = v;
+  const steps = $$('.step', sec);
+  steps[0].disabled = v == null || v <= 0;
+  steps[1].disabled = v == null || v >= c.max;
+  $('[data-hint]', sec).textContent = v == null ? '수준을 고르면 점수가 들어갑니다' : RUBRIC.levels[lv] + ' 구간 ' + c.bands[lv][0] + '–' + c.bands[lv][1] + '점';
+}
+
+function paintTotal() {
+  const any = S.work.scores.some(v => v != null);
+  $('#sum').textContent = any ? totalOf(S.work.scores) : '–';
+}
+
+async function submitScore() {
+  if (S.busy) return;
+  const t = S.team, k = keyOf(t), w = S.work, errBox = $('#scoreErr');
+  errBox.innerHTML = '';
+  const miss = w.scores.map((v, i) => v == null ? i : -1).filter(i => i >= 0);
+  if (miss.length) {
+    miss.forEach(i => $('.crit[data-i="' + i + '"]').classList.add('missing'));
+    errBox.innerHTML = '<div class="alert err" role="alert">아직 채점하지 않은 항목이 ' + miss.length + '개 있습니다: ' + miss.map(i => esc(C[i].name)).join(', ') + '</div>';
+    $('.crit[data-i="' + miss[0] + '"]').scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    return;
+  }
+  const btn = $('#submit'), label = btn.textContent;
+  S.busy = true; btn.disabled = true; btn.textContent = '제출하는 중';
+  let out;
+  try { out = await api('submit', { judge: S.judge, code: S.code, team: t.id, grade: t.grade, order: t.order, scores: w.scores, comment: w.comment.trim() }); }
+  catch (e) { out = { ok: false, error: e.message }; }
+  S.busy = false;
+  if (!out.ok) {
+    btn.disabled = false; btn.textContent = label;
+    errBox.innerHTML = '<div class="alert err" role="alert">제출하지 못했습니다. ' + esc(out.error || '') + ' 점수는 이 기기에 남아 있으니 다시 눌러 주세요.</div>';
+    errBox.scrollIntoView({ block: 'center' });
+    return;
+  }
+  S.mine[k] = out.record; delete S.drafts[k]; saveDrafts();
+  toast('제출했습니다. ' + (t.title || '') + ' ' + totalOf(out.record.scores) + '점');
+  const next = S.roster.filter(x => x.grade === t.grade && x.order > t.order && !S.mine[keyOf(x)])[0];
+  if (next) openTeam(keyOf(next)); else viewList();
+}
+
+/* ---------- 관리자: 결과 ---------- */
+
+function viewAdminGate(err) {
+  app.innerHTML = demoNote() + '<div class="gate"><form class="gate-card" id="adminForm">' +
+    '<h1 class="gate-title">' + (ROUTE === '#manage' ? '팀 편집' : '심사 결과') + '</h1><div class="staff" aria-hidden="true"></div>' +
+    (err ? '<div class="alert err" role="alert">' + esc(err) + '</div>' : '') +
+    '<label class="field"><span>관리자 코드</span><input id="aCode" type="password" autocomplete="off" required></label>' +
+    '<button class="btn primary" id="aGo">열기</button>' +
+    '<p class="gate-foot"><a href="#">채점 화면으로</a></p></form></div>';
+  $('#adminForm').onsubmit = e => { e.preventDefault(); S.admin.code = $('#aCode').value.trim(); loadResults(true); };
+}
+
+async function loadResults(fromGate) {
+  const A = S.admin;
+  const btn = $('#aGo') || $('#refresh'); if (btn) btn.disabled = true;
+  let out;
+  try { out = await api('results', { code: A.code }); }
+  catch (e) { out = { ok: false, error: e.message }; }
+  if (!out.ok) {
+    if (fromGate || out.code === 'BAD_CODE' || !A.data) { try { sessionStorage.removeItem('ssj.admin'); } catch (e) {} return viewAdminGate(out.error); }
+    if (btn) btn.disabled = false;
+    const box = $('#resErr'); if (box) box.innerHTML = '<div class="alert err" role="alert">새로 불러오지 못했습니다. ' + esc(out.error || '') + '</div>';
+    return;
+  }
+  try { sessionStorage.setItem('ssj.admin', A.code); } catch (e) {}
+  S.title = out.title || S.title;
+  A.data = out; A.at = out.at; A.agg = aggregate(out.roster, out.records, C);
+  showAdmin();
+}
+
+function showAdmin() {
+  if (ROUTE === '#manage') { if (!S.manage || !S.manage.dirty) buildManage(); viewManage(); }
+  else viewResults();
+}
+
+function viewResults() {
+  const A = S.admin, agg = A.agg;
+  const grades = Object.keys(agg.grades).map(Number).sort((a, b) => a - b).map(g => agg.grades[g]);
+  const time = A.at ? new Date(A.at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '';
+  const day = new Date(A.at || Date.now()).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  const gradeHtml = g => {
+    const firsts = g.teams.filter(t => t.rank === 1), seconds = g.teams.filter(t => t.rank === 2);
+    const awardCard = (t, cls) => '<div class="award ' + cls + '"><span class="place">' + esc(t.award) + '</span><b>' + esc(t.title) + '</b><span class="avg">' + f2(t.totalAvg) + '</span><small>' + esc(t.members) + '</small></div>';
+    const unscored = g.teams.filter(t => t.n === 0).length, few = g.teams.filter(t => t.fewJudges);
+    const ranked = g.teams.filter(t => t.n > 0);
+    const broke = ranked.some((t, i) => i > 0 && t.rank !== ranked[i - 1].rank && t.rank <= 3 && t.totalSum * ranked[i - 1].n === ranked[i - 1].totalSum * t.n);
+    const judgeNames = Array.from(new Set([].concat.apply([], g.teams.map(t => t.judges.map(j => j.judge))))).sort();
+    const byOrder = g.teams.slice().sort((a, b) => a.order - b.order);
+    return '<section class="grade-block"><h2>' + g.grade + '학년</h2>' +
+      '<p class="grade-meta">' + g.teams.length + '팀 가운데 ' + g.scored + '팀 채점, 채점관 ' + judgeNames.length + '명</p>' +
+      (firsts.length ? '<div class="podium">' + firsts.map(t => awardCard(t, 'first')).join('') + seconds.map(t => awardCard(t, 'second')).join('') + '</div>' : '') +
+      (broke ? '<div class="alert">총점 평균이 같은 팀이 있어 과학 개념 정확성 평균, 그다음 창의성과 독창성 평균으로 순위를 가렸습니다.</div>' : '') +
+      (g.hasTie ? '<div class="alert">끝까지 점수가 같은 팀이 있어 공동 순위로 두었습니다. 공동 1등이 나오면 2등은 비게 됩니다.</div>' : '') +
+      (few.length ? '<div class="alert">채점 인원이 다른 팀보다 적은 팀이 있습니다: ' + few.map(t => esc(t.order + '번 ' + t.title) + ' (' + t.n + '명)').join(', ') + '</div>' : '') +
+      (unscored && g.scored ? '<div class="alert">아직 채점되지 않은 팀이 ' + unscored + '팀 있습니다.</div>' : '') +
+      '<div class="scroll-x"><table class="rank"><thead><tr><th>순위</th><th class="hide-s">순서</th><th class="l">곡 제목과 팀원</th>' +
+      C.map(c => '<th class="hide-s">' + esc(c.short) + '<small>' + c.max + '</small></th>').join('') + '<th>총점 평균</th><th>채점<br>인원</th></tr></thead><tbody>' +
+      g.teams.map(t => {
+        const k = keyOf(t), open = !!A.open[k];
+        return '<tr class="row ' + (t.rank === 1 ? 'r1' : t.rank === 2 ? 'r2' : t.n === 0 ? 'none' : '') + '" data-k="' + k + '" tabindex="0" aria-expanded="' + open + '">' +
+          '<td>' + (t.rank == null ? '–' : t.rank) + '</td><td class="hide-s">' + t.order + '</td>' +
+          '<td class="l title"><b>' + esc(t.title) + (t.tied && t.rank <= 2 ? '<span class="tag">공동</span>' : '') + (t.fewJudges ? '<span class="tag">인원 적음</span>' : '') + '</b><small>' + esc(t.members) + '</small></td>' +
+          t.critAvg.map(v => '<td class="hide-s">' + f1(v) + '</td>').join('') +
+          '<td class="total">' + (t.n ? f2(t.totalAvg) : '채점 전') + '</td><td>' + t.n + '</td></tr>' +
+          '<tr class="detail"' + (open ? '' : ' hidden') + '><td colspan="' + (5 + C.length) + '">' + (t.n ? '<table class="mini"><thead><tr><th class="l">채점관</th>' + C.map(c => '<th>' + esc(c.short) + '</th>').join('') + '<th>총점</th><th class="l">한줄평</th></tr></thead><tbody>' +
+            t.judges.map(j => '<tr><td class="l">' + esc(j.judge) + '</td>' + j.scores.map(s => '<td>' + s + '</td>').join('') + '<td><b>' + j.total + '</b></td><td class="l">' + esc(j.comment) + '</td></tr>').join('') + '</tbody></table>' : '아직 제출된 점수가 없습니다.') + '</td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      (judgeNames.length ? '<h3 class="sub">채점관별 총점 (발표 순서)</h3><div class="scroll-x"><table class="matrix"><thead><tr><th>순서</th><th class="l">곡 제목</th>' +
+        judgeNames.map(n => '<th>' + esc(n) + '</th>').join('') + '<th>평균</th><th>순위</th></tr></thead><tbody>' +
+        byOrder.map(t => '<tr><td>' + t.order + '</td><td class="l">' + esc(t.title) + '</td>' + judgeNames.map(n => { const j = t.judges.find(x => x.judge === n); return '<td>' + (j ? j.total : '–') + '</td>'; }).join('') +
+          '<td><b>' + f2(t.totalAvg) + '</b></td><td>' + (t.rank == null ? '–' : t.rank) + '</td></tr>').join('') + '</tbody></table></div>' : '') +
+      '<div class="print-only sign"><span>심사위원장</span><span>확인</span></div></section>';
+  };
+
+  app.innerHTML = demoNote() + '<div class="wrap wide">' +
+    '<header class="top"><div><h1>' + esc(S.title) + ' 심사 결과</h1><p>' + day + ' ' + time + ' 기준, 채점관 ' + agg.judges.length + '명 참여</p></div>' +
+    '<div class="top-actions"><label class="auto"><input type="checkbox" id="auto"' + (A.timer ? ' checked' : '') + '> 20초마다 새로 고침</label>' +
+    '<a class="btn" href="#manage">팀 편집</a><button class="btn" id="refresh">새로 고침</button><button class="btn" id="print">채점표 인쇄</button><button class="btn primary" id="reveal">발표 화면</button></div></header>' +
+    '<div id="resErr"></div>' +
+    (grades.length ? grades.map(gradeHtml).join('') : '<p class="empty">아직 등록된 팀이 없습니다. <a href="#manage">팀 편집</a>에서 팀을 넣어 주세요.</p>') +
+    (agg.judges.length ? '<section class="grade-block no-print"><h2>채점관 제출 현황</h2><p class="grade-meta">채점관이 학년별로 몇 팀을 제출했는지 보여 줍니다.</p><div class="scroll-x"><table class="matrix"><thead><tr><th class="l">채점관</th>' +
+      grades.map(g => '<th>' + g.grade + '학년 (' + g.teams.length + '팀)</th>').join('') + '</tr></thead><tbody>' +
+      agg.judges.map(j => '<tr><td class="l">' + esc(j.judge) + '</td>' + grades.map(g => '<td>' + (j.counts[g.grade] || 0) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div></section>' : '') +
+    '<p class="gate-foot no-print"><a href="#">채점 화면으로</a></p></div>';
+
+  $('#refresh').onclick = () => loadResults(false);
+  $('#print').onclick = () => window.print();
+  $('#reveal').onclick = openStage;
+  $('#auto').onchange = e => { clearInterval(A.timer); A.timer = e.target.checked ? setInterval(() => { if (!$('.stage')) loadResults(false); }, 20000) : 0; };
+  $$('.rank tr.row').forEach(tr => {
+    const toggle = () => { const k = tr.dataset.k; A.open[k] = !A.open[k]; tr.setAttribute('aria-expanded', String(!!A.open[k])); tr.nextElementSibling.hidden = !A.open[k]; };
+    tr.onclick = toggle;
+    tr.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } };
+  });
+}
+
+/* ---------- 관리자: 팀 편집 ---------- */
+
+function splitMembers(s) {
+  let parts = String(s || '').split(/[,，、·\/]+/).map(x => x.trim()).filter(Boolean);
+  if (parts.length === 1 && /\s/.test(parts[0])) parts = parts[0].split(/\s+/);
+  return parts;
+}
+function buildManage() {
+  const A = S.admin;
+  S.manage = {
+    title: A.data.title || S.title, judgeCode: A.data.judgeCode || '', grade: (S.manage && S.manage.grade) || 1, dirty: false,
+    teams: A.data.roster.map(t => ({ id: t.id, grade: t.grade, title: t.title, members: splitMembers(t.members) }))
+  };
+}
+function manageGrades() {
+  return Array.from(new Set([1, 2, 3].concat(S.manage.teams.map(t => t.grade)))).sort((a, b) => a - b);
+}
+function peopleIn(teams) { return teams.reduce((s, t) => s + t.members.filter(m => m.trim()).length, 0); }
+
+function viewManage(focusSel) {
+  const A = S.admin, M = S.manage, grades = manageGrades();
+  if (grades.indexOf(M.grade) < 0) M.grade = grades[0];
+  const counts = {};
+  Object.keys(A.agg.grades).forEach(g => A.agg.grades[g].teams.forEach(t => { counts[t.id] = t.n; }));
+  const rows = M.teams.map((t, i) => ({ t, i })).filter(x => x.t.grade === M.grade);
+  rows.forEach(x => { while (x.t.members.length < 2) x.t.members.push(''); });
+
+  app.innerHTML = demoNote() + '<div class="wrap wide manage">' +
+    '<header class="top"><div><h1>팀 편집</h1><p>학년별로 팀, 팀원, 곡 제목을 넣고 발표 순서를 정합니다.</p></div>' +
+    '<div class="top-actions"><a class="btn" href="#result">결과 보기</a></div></header><div id="mErr"></div>' +
+    '<section class="grade-block"><h2>대회 설정</h2><div class="set-grid">' +
+    '<label class="field"><span>대회 이름</span><input id="mTitle" maxlength="60" value="' + esc(M.title) + '"></label>' +
+    '<label class="field"><span>심사 코드 (채점관에게 알려 줌)</span><input id="mCode" maxlength="20" autocomplete="off" value="' + esc(M.judgeCode) + '"></label>' +
+    '<label class="field"><span>채점관에게 보낼 주소</span><input id="mLink" readonly value="' + esc(GAS ? (A.data.appUrl || '') : location.href.split('#')[0]) + '"></label>' +
+    '</div></section>' +
+    '<section class="grade-block"><nav class="grades" role="tablist" aria-label="학년">' + grades.map(g => {
+      const ts = M.teams.filter(t => t.grade === g);
+      return '<button role="tab" aria-selected="' + (g === M.grade) + '" data-g="' + g + '">' + g + '학년<small class="num" data-count="' + g + '">' + ts.length + '팀, ' + peopleIn(ts) + '명</small></button>';
+    }).join('') + '</nav>' +
+    (rows.length ? '<ol class="m-list">' + rows.map((x, n) => {
+      const t = x.t, sc = counts[t.id] || 0;
+      return '<li class="m-team" data-i="' + x.i + '"><span class="no">' + (n + 1) + '</span><div class="m-fields">' +
+        '<input class="m-title" maxlength="100" placeholder="곡 제목" aria-label="' + (n + 1) + '번 팀 곡 제목" value="' + esc(t.title) + '">' +
+        '<div class="m-members">' + t.members.map((m, j) => '<input class="m-mem" data-j="' + j + '" maxlength="20" placeholder="팀원 ' + (j + 1) + '" aria-label="' + (n + 1) + '번 팀 팀원 ' + (j + 1) + '" value="' + esc(m) + '">').join('') +
+        '<button type="button" class="btn quiet m-more">팀원 칸 추가</button></div>' +
+        (sc ? '<p class="m-note">채점 ' + sc + '건이 들어와 있습니다. 순서나 이름을 바꿔도 점수는 그대로 남습니다.</p>' : '') + '</div>' +
+        '<div class="m-ops">' + (t.sure
+          ? '<button type="button" class="btn m-del sure">점수 ' + sc + '건이 집계에서 빠집니다. 삭제</button><button type="button" class="btn quiet m-keep">취소</button>'
+          : '<button type="button" class="step sm m-up" aria-label="' + (n + 1) + '번 팀을 위로"' + (n === 0 ? ' disabled' : '') + '>↑</button>' +
+            '<button type="button" class="step sm m-down" aria-label="' + (n + 1) + '번 팀을 아래로"' + (n === rows.length - 1 ? ' disabled' : '') + '>↓</button>' +
+            '<button type="button" class="btn quiet m-del">삭제</button>') + '</div></li>';
+    }).join('') + '</ol>' : '<p class="empty">' + M.grade + '학년에는 아직 팀이 없습니다. 아래에서 팀을 추가해 주세요.</p>') +
+    '<div class="m-tools"><button type="button" class="btn primary" id="mAdd">팀 추가</button><button type="button" class="btn" id="mPaste">여러 팀 한꺼번에 넣기</button>' +
+    '<button type="button" class="btn" id="mShuffle"' + (rows.length < 2 ? ' disabled' : '') + '>순서 무작위로 섞기</button></div></section></div>' +
+    '<footer class="bar manage-bar"><div class="bar-in"><p id="mState"></p><div class="bar-btns"><button class="btn quiet" id="mRevert">변경 취소</button><button class="btn primary" id="mSave">저장</button></div></div></footer>';
+
+  const paintState = () => {
+    $('#mState').textContent = M.dirty ? '저장하지 않은 변경이 있습니다' : '모두 저장되어 있습니다';
+    $('#mSave').disabled = !M.dirty; $('#mRevert').disabled = !M.dirty;
+  };
+  const dirty = () => { M.dirty = true; paintState(); };
+  const swap = (a, b) => { const tmp = M.teams[a]; M.teams[a] = M.teams[b]; M.teams[b] = tmp; };
+  paintState();
+
+  $('#mTitle').oninput = e => { M.title = e.target.value; dirty(); };
+  $('#mCode').oninput = e => { M.judgeCode = e.target.value; dirty(); };
+  $('#mLink').onfocus = e => e.target.select();
+  $$('.grades button').forEach(b => { b.onclick = () => { M.grade = Number(b.dataset.g); viewManage(); }; });
+  $$('.m-team').forEach((li, n) => {
+    const i = Number(li.dataset.i), t = M.teams[i];
+    $('.m-title', li).oninput = e => { t.title = e.target.value; dirty(); };
+    $$('.m-mem', li).forEach(inp => { inp.oninput = e => {
+      t.members[Number(inp.dataset.j)] = e.target.value; dirty();
+      const ts = M.teams.filter(x => x.grade === M.grade);
+      $('[data-count="' + M.grade + '"]').textContent = ts.length + '팀, ' + peopleIn(ts) + '명';
+    }; });
+    $('.m-more', li).onclick = () => { t.members.push(''); dirty(); viewManage('.m-team[data-i="' + i + '"] .m-mem[data-j="' + (t.members.length - 1) + '"]'); };
+    const up = $('.m-up', li), down = $('.m-down', li), keep = $('.m-keep', li);
+    if (up) up.onclick = () => { swap(i, rows[n - 1].i); dirty(); viewManage('.m-team[data-i="' + rows[n - 1].i + '"] .m-up:not([disabled]), .m-team[data-i="' + rows[n - 1].i + '"] .m-down'); };
+    if (down) down.onclick = () => { swap(i, rows[n + 1].i); dirty(); viewManage('.m-team[data-i="' + rows[n + 1].i + '"] .m-down:not([disabled]), .m-team[data-i="' + rows[n + 1].i + '"] .m-up'); };
+    if (keep) keep.onclick = () => { delete t.sure; viewManage(); };
+    $('.m-del', li).onclick = () => {
+      if ((counts[t.id] || 0) > 0 && !t.sure) { t.sure = true; return viewManage('.m-team[data-i="' + i + '"] .m-keep'); }
+      M.teams.splice(i, 1); dirty(); viewManage('#mAdd');
+    };
+  });
+  $('#mAdd').onclick = () => {
+    M.teams.push({ id: '', grade: M.grade, title: '', members: ['', ''] }); dirty();
+    viewManage('.m-team[data-i="' + (M.teams.length - 1) + '"] .m-title');
+  };
+  $('#mShuffle').onclick = () => {
+    const idx = rows.map(x => x.i), picked = idx.map(i => M.teams[i]);
+    for (let a = picked.length - 1; a > 0; a--) { const b = Math.floor(Math.random() * (a + 1)); const tmp = picked[a]; picked[a] = picked[b]; picked[b] = tmp; }
+    idx.forEach((i, n) => { M.teams[i] = picked[n]; });
+    dirty(); viewManage('#mShuffle'); toast(M.grade + '학년 발표 순서를 섞었습니다. 저장을 눌러야 반영됩니다.');
+  };
+  $('#mPaste').onclick = openPaste;
+  $('#mRevert').onclick = () => { buildManage(); viewManage(); };
+  $('#mSave').onclick = saveManage;
+  if (focusSel) { const el = $(focusSel); if (el) el.focus(); }
+}
+
+function parsePaste(text, order) {
+  return String(text || '').split(/\r?\n/).map(line => {
+    const f = (line.indexOf('\t') >= 0 ? line.split('\t') : line.split(/[,，]/)).map(x => x.trim()).filter(Boolean);
+    if (!f.length) return null;
+    if (f.length === 1) return { title: f[0], members: [] };
+    return order === 'members' ? { title: f[f.length - 1], members: f.slice(0, -1) } : { title: f[0], members: f.slice(1) };
+  }).filter(Boolean);
+}
+
+function openPaste() {
+  const d = $('#pasteDlg'), M = S.manage;
+  d.innerHTML = '<div class="sheet-head"><h2>' + M.grade + '학년 팀 한꺼번에 넣기</h2><button class="btn" id="pClose">닫기</button></div><div class="sheet-body">' +
+    '<p class="p-help">한 줄에 한 팀씩 적습니다. 엑셀이나 한글 표에서 복사해 붙여도 됩니다. 칸은 탭이나 쉼표로 나눕니다.</p>' +
+    '<label class="field"><span>칸 순서</span><select id="pOrder"><option value="title">곡 제목, 팀원, 팀원</option><option value="members">팀원, 팀원, 곡 제목</option></select></label>' +
+    '<label class="field"><span>팀 목록</span><textarea id="pText" rows="8" placeholder="판이 움직여요, 김가람, 이나래&#10;광합성 레시피, 박다온, 최라희"></textarea></label>' +
+    '<p id="pInfo" class="grade-meta">아직 넣을 팀이 없습니다.</p><button class="btn primary" id="pGo" disabled>목록에 추가</button></div>';
+  const read = () => parsePaste($('#pText', d).value, $('#pOrder', d).value);
+  const paint = () => {
+    const ts = read();
+    $('#pInfo', d).textContent = ts.length ? ts.length + '팀, ' + peopleIn(ts) + '명을 ' + M.grade + '학년 목록 끝에 추가합니다. 첫 팀: ' + ts[0].title + (ts[0].members.length ? ' (' + ts[0].members.join(', ') + ')' : '') : '아직 넣을 팀이 없습니다.';
+    $('#pGo', d).disabled = !ts.length;
+  };
+  $('#pText', d).oninput = paint; $('#pOrder', d).onchange = paint;
+  $('#pClose', d).onclick = () => d.close();
+  $('#pGo', d).onclick = () => {
+    const ts = read();
+    ts.forEach(t => M.teams.push({ id: '', grade: M.grade, title: t.title, members: t.members }));
+    M.dirty = true; d.close(); viewManage('#mSave'); toast(ts.length + '팀을 추가했습니다. 저장을 눌러야 반영됩니다.');
+  };
+  d.showModal();
+}
+
+async function saveManage() {
+  const A = S.admin, M = S.manage, box = $('#mErr');
+  if (S.busy) return;
+  box.innerHTML = '';
+  const title = M.title.trim(), judgeCode = M.judgeCode.trim();
+  const problem = !title ? '대회 이름을 입력해 주세요.' : !/^\S{4,20}$/.test(judgeCode) ? '심사 코드는 띄어쓰기 없이 4~20자로 정해 주세요.' : '';
+  if (problem) { box.innerHTML = '<div class="alert err" role="alert">' + esc(problem) + '</div>'; box.scrollIntoView({ block: 'center' }); return; }
+  const roster = [];
+  manageGrades().forEach(g => M.teams.filter(t => t.grade === g).forEach(t => {
+    const members = t.members.map(m => m.trim()).filter(Boolean).join(', ');
+    if (t.title.trim() || members) roster.push({ id: t.id, grade: g, title: t.title.trim(), members });
+  }));
+  const btn = $('#mSave');
+  S.busy = true; btn.disabled = true; btn.textContent = '저장하는 중';
+  let out;
+  try { out = await api('saveRoster', { code: A.code, title, judgeCode, roster }); }
+  catch (e) { out = { ok: false, error: e.message }; }
+  S.busy = false;
+  if (!out.ok) {
+    btn.disabled = false; btn.textContent = '저장';
+    box.innerHTML = '<div class="alert err" role="alert">저장하지 못했습니다. ' + esc(out.error || '') + ' 입력한 내용은 화면에 남아 있습니다.</div>';
+    box.scrollIntoView({ block: 'center' });
+    return;
+  }
+  A.data.roster = out.roster; A.data.title = out.title; A.data.judgeCode = out.judgeCode; S.title = out.title;
+  A.agg = aggregate(out.roster, A.data.records, C);
+  buildManage(); viewManage();
+  toast('저장했습니다. 모두 ' + out.roster.length + '팀');
+}
+
+/* ---------- 발표 화면 ---------- */
+
+function openStage() {
+  const agg = S.admin.agg;
+  const grades = Object.keys(agg.grades).map(Number).sort((a, b) => a - b).map(g => agg.grades[g]).filter(g => g.scored > 0);
+  if (!grades.length) return toast('아직 발표할 점수가 없습니다.');
+  const steps = [{ type: 'open' }];
+  grades.forEach(g => {
+    const first = g.teams.filter(t => t.rank === 1), second = g.teams.filter(t => t.rank === 2);
+    steps.push({ type: 'grade', g });
+    if (second.length) steps.push({ type: 'award', g, place: 2, teams: second, shown: false });
+    steps.push({ type: 'award', g, place: 1, teams: first, shown: false });
+  });
+  steps.push({ type: 'end', grades });
+
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const el = document.createElement('div');
+  el.className = 'stage'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', '수상 발표 화면'); el.tabIndex = -1;
+  el.innerHTML = '<div class="stage-lines"></div><canvas></canvas>' +
+    '<div class="stage-top"><span>' + esc(S.title) + '</span><span><label><input type="checkbox" id="showScore" checked> 점수 보이기</label> <button id="closeStage">닫기</button></span></div>' +
+    '<div class="stage-mid" aria-live="polite"></div>' +
+    '<div class="stage-foot"><span id="stagePos"></span><span>화면을 누르거나 → 키로 다음, ← 키로 이전, Esc 로 닫기</span></div>';
+  document.body.appendChild(el);
+  const mid = $('.stage-mid', el), canvas = $('canvas', el);
+  let at = 0, shuffleTimer = 0, raf = 0;
+
+  const teamHtml = (t, showScore) => '<div class="s-team"><p class="s-title pop">' + esc(t.title) + '</p><p class="s-members rise">' + esc(t.members) + '</p>' +
+    (showScore ? '<p class="s-score rise">평균 ' + f2(t.totalAvg) + '점</p>' : '') + '</div>';
+
+  function paint() {
+    clearInterval(shuffleTimer); stopConfetti();
+    const s = steps[at], showScore = $('#showScore', el).checked;
+    $('#stagePos', el).textContent = (at + 1) + ' / ' + steps.length;
+    if (s.type === 'open') {
+      mid.innerHTML = '<div><p class="s-title rise">' + esc(S.title) + '</p><p class="s-sub">수상 발표</p></div>';
+    } else if (s.type === 'grade') {
+      mid.innerHTML = '<div><p class="s-grade pop">' + s.g.grade + '학년</p><p class="s-sub">' + s.g.scored + '팀이 무대에 올랐습니다</p></div>';
+    } else if (s.type === 'award') {
+      const label = (s.teams.length > 1 ? '공동 ' : '') + s.place + '등';
+      const head = '<p class="s-label ' + (s.place === 2 ? 'second' : '') + '">' + s.g.grade + '학년 ' + label + '</p>';
+      if (!s.shown) {
+        const titles = s.g.teams.filter(t => t.n > 0).map(t => t.title);
+        mid.innerHTML = '<div>' + head + '<p class="s-title shuffle" id="shuf">' + (still ? '?' : esc(titles[0])) + '</p><p class="s-sub">누구일까요</p></div>';
+        if (!still && titles.length > 1) { let i = 0; shuffleTimer = setInterval(() => { i = (i + 1) % titles.length; const n = $('#shuf', el); if (n) n.textContent = titles[i]; }, 95); }
+      } else {
+        mid.innerHTML = '<div class="' + (s.teams.length > 1 ? 'multi' : '') + '">' + head + s.teams.map(t => teamHtml(t, showScore)).join('') + '</div>';
+        if (s.place === 1 && !still) confetti();
+      }
+    } else {
+      const cell = (ts, place) => ts.map(t => '<div class="s-cell"><em class="' + (place === 2 ? 'second' : '') + '">' + esc(t.award) + '</em><b>' + esc(t.title) + '</b><small>' + esc(t.members) + '</small></div>').join('');
+      mid.innerHTML = '<div><p class="s-label">모두 수고했습니다</p><div class="s-board rise">' + s.grades.map(g =>
+        '<div class="s-row"><span class="g">' + g.grade + '학년</span><div>' + cell(g.teams.filter(t => t.rank === 1), 1) + '</div><div>' + cell(g.teams.filter(t => t.rank === 2), 2) + '</div></div>').join('') + '</div></div>';
+    }
+  }
+  function next() { const s = steps[at]; if (s.type === 'award' && !s.shown) { s.shown = true; paint(); } else if (at < steps.length - 1) { at++; paint(); } }
+  function prev() { const s = steps[at]; if (s.type === 'award' && s.shown) { s.shown = false; paint(); } else if (at > 0) { at--; paint(); } }
+  function close() {
+    clearInterval(shuffleTimer); stopConfetti(); document.removeEventListener('keydown', onKey);
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    el.remove();
+  }
+  function onKey(e) {
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+  }
+  function stopConfetti() { cancelAnimationFrame(raf); const c = canvas.getContext('2d'); c.clearRect(0, 0, canvas.width, canvas.height); }
+  function confetti() {
+    const w = canvas.width = el.clientWidth, h = canvas.height = el.clientHeight, c = canvas.getContext('2d');
+    const cols = ['#F3B824', '#FFFFFF', '#7FA2FF', '#39C6A8', '#FF8E7A'];
+    const ps = Array.from({ length: 180 }, () => ({ x: Math.random() * w, y: -20 - Math.random() * h * .6, vx: (Math.random() - .5) * 3, vy: 2 + Math.random() * 4, s: 6 + Math.random() * 8, r: Math.random() * 6.28, vr: (Math.random() - .5) * .3, c: cols[Math.floor(Math.random() * cols.length)] }));
+    const t0 = performance.now();
+    (function tick(now) {
+      c.clearRect(0, 0, w, h);
+      ps.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += .03; p.r += p.vr; c.save(); c.translate(p.x, p.y); c.rotate(p.r); c.fillStyle = p.c; c.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); c.restore(); });
+      if (now - t0 < 6000) raf = requestAnimationFrame(tick); else c.clearRect(0, 0, w, h);
+    })(t0);
+  }
+
+  el.onclick = e => { if (e.target.closest('.stage-top')) return; next(); };
+  $('#closeStage', el).onclick = close;
+  $('#showScore', el).onchange = paint;
+  document.addEventListener('keydown', onKey);
+  if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+  el.focus();
+  paint();
+}
+
+/* ---------- 시작 ---------- */
+
+let ROUTE = '';   // '', '#result', '#manage'
+
+function route() {
+  if (!GAS) ROUTE = location.hash;
+  clearInterval(S.admin.timer); S.admin.timer = 0;
+  const st = $('.stage'); if (st) st.remove();
+  ['#rubricDlg', '#pasteDlg'].forEach(id => { const d = $(id); if (d.open) d.close(); });
+  if (ROUTE === '#result' || ROUTE === '#manage') {
+    if (S.admin.data && S.admin.code) {                      // 이미 불러온 자료가 있으면 바로 보여 주고, 결과 화면은 새로 받아 온다
+      showAdmin();
+      if (ROUTE === '#result') loadResults(false);
+      return;
+    }
+    let saved = ''; try { saved = sessionStorage.getItem('ssj.admin') || ''; } catch (e) {}
+    if (saved) { S.admin.code = saved; app.innerHTML = '<p class="empty">불러오는 중</p>'; loadResults(true); } else viewAdminGate();
+    return;
+  }
+  ROUTE = '';
+  const sess = store.get('ssj.session', null);
+  if (sess && sess.judge && sess.code) { S.judge = sess.judge; S.code = sess.code; viewGate(); enterJudge(sess.judge, sess.code, true); }
+  else viewGate();
+}
+window.addEventListener('beforeunload', e => { if (S.manage && S.manage.dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+if (GAS) {
+  // Apps Script 화면은 틀(iframe) 안에서 열려 주소의 # 을 직접 쓸 수 없으므로, 화면 안의 이동은 직접 처리한다.
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    e.preventDefault();
+    ROUTE = a.getAttribute('href') === '#' ? '' : a.getAttribute('href');
+    try { google.script.history.replace(null, {}, ROUTE.slice(1)); } catch (err) {}
+    route();
+  });
+  const start = loc => {
+    const view = loc && (loc.hash || (loc.parameter && loc.parameter.view) || '');
+    ROUTE = view === 'result' || view === 'manage' ? '#' + view : '';
+    route();
+  };
+  try { google.script.url.getLocation(start); } catch (err) { start(null); }
+} else {
+  window.addEventListener('hashchange', route);
+  route();
+}
+</script>
+</body>
+</html>
