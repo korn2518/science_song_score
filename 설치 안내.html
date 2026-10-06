@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>과학송 경연대회 심사 시스템 설치 안내</title>
+<style>
+  body { margin: 0; padding: 32px 20px 64px; color: #111; background: #fff; font: 16px/1.7 "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  main { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 26px; line-height: 1.3; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 40px 0 8px; padding-top: 16px; border-top: 2px solid #111; }
+  h3 { font-size: 17px; margin: 24px 0 4px; }
+  p, ul, ol { margin: 8px 0; }
+  li { margin: 4px 0; }
+  code { font: 14px/1.4 Consolas, "D2Coding", monospace; background: #f0f0f0; padding: 2px 5px; border-radius: 3px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+  th, td { border: 1px solid #999; padding: 7px 10px; text-align: left; vertical-align: top; }
+  th { background: #eee; }
+  .note { border: 1px solid #111; padding: 10px 14px; margin: 14px 0; }
+  @media print { body { padding: 0; font-size: 11pt; } h2 { break-after: avoid; } }
+</style>
+</head>
+<body>
+<main>
+<h1>과학송 경연대회 심사 시스템 설치 안내</h1>
+<p>채점관이 휴대폰으로 채점하면 점수가 구글 시트에 모이고, 학년별 1등과 2등이 자동으로 정해집니다. 팀과 팀원, 곡 제목, 발표 순서는 웹앱 안에서 넣고 고칩니다.</p>
+
+<h2>들어 있는 파일</h2>
+<table>
+  <tr><th>파일</th><th>쓰임</th></tr>
+  <tr><td><code>judge.html</code></td><td>웹앱 본체. 채점 화면, 결과 화면, 팀 편집, 발표 화면이 모두 들어 있습니다. GitHub Pages에 올립니다.</td></tr>
+  <tr><td><code>apps-script/Judge.gs</code></td><td>점수와 팀 목록을 구글 시트에 저장하고 순위를 내는 Apps Script입니다.</td></tr>
+  <tr><td><code>채점기준표/</code></td><td>인쇄용 채점 기준표(한글 파일)입니다.</td></tr>
+</table>
+<div class="note">설치 전에 먼저 <code>judge.html</code>을 더블클릭해 열어 보세요. 주소를 넣기 전에는 <b>연습 모드</b>로 열리며, 심사 코드 <code>0000</code>, 관리자 코드 <code>admin</code>으로 모든 화면을 눌러 볼 수 있습니다. 연습 모드의 내용은 그 컴퓨터에만 저장됩니다.</div>
+
+<h2>설치 (한 번만, 10분쯤)</h2>
+
+<h3>1. 구글 시트와 Apps Script 만들기</h3>
+<ol>
+  <li>새 구글 스프레드시트를 만들고 이름을 "과학송 심사"로 붙입니다.</li>
+  <li>메뉴에서 <b>확장 프로그램 → Apps Script</b>를 엽니다.</li>
+  <li>처음 들어 있는 코드를 모두 지우고 <code>Judge.gs</code>의 내용을 통째로 붙여 넣은 뒤 저장합니다.</li>
+  <li>위쪽 함수 목록에서 <code>setup</code>을 고르고 <b>실행</b>을 누릅니다. 권한을 묻는 창이 뜨면 허용합니다.</li>
+</ol>
+<p>시트에 <code>설정</code>, <code>순서표</code>, <code>심사기록</code> 탭이 생깁니다. <code>설정</code> 탭에서 <b>관리자 코드</b>(8자리)를 확인해 적어 둡니다.</p>
+<div class="note">엔트리 폼의 <code>Code.gs</code>가 있는 프로젝트에는 넣지 마세요. 두 코드의 기능이 겹쳐 엔트리 폼이 멈춥니다. 반드시 새 시트의 새 프로젝트로 만듭니다.</div>
+
+<h3>2. 웹 앱으로 배포하기</h3>
+<ol>
+  <li>Apps Script 오른쪽 위에서 <b>배포 → 새 배포</b>를 누르고 유형으로 <b>웹 앱</b>을 고릅니다.</li>
+  <li>실행 계정은 <b>나</b>, 액세스 권한은 <b>모든 사용자</b>로 둡니다.</li>
+  <li>배포한 뒤 나오는 <b>웹 앱 URL</b>(<code>/exec</code>로 끝남)을 복사합니다.</li>
+</ol>
+
+<h3>3. 웹앱에 주소 넣고 올리기</h3>
+<ol>
+  <li><code>judge.html</code>을 메모장으로 열어 <code>const API_URL = '';</code>를 찾습니다.</li>
+  <li>따옴표 사이에 복사한 주소를 붙여 넣고 저장합니다.</li>
+  <li>엔트리 폼이 있는 GitHub 저장소에 <code>judge.html</code>을 올립니다.</li>
+</ol>
+<table>
+  <tr><th>누가</th><th>주소</th><th>들어갈 때</th></tr>
+  <tr><td>채점관</td><td><code>(내 페이지 주소)/judge.html</code></td><td>이름과 심사 코드</td></tr>
+  <tr><td>진행 교사 (팀 편집)</td><td><code>(내 페이지 주소)/judge.html#manage</code></td><td>관리자 코드</td></tr>
+  <tr><td>진행 교사 (결과와 발표)</td><td><code>(내 페이지 주소)/judge.html#result</code></td><td>관리자 코드</td></tr>
+</table>
+
+<h3>4. 팀 넣기</h3>
+<p>팀 편집 화면에서 학년을 고르고 팀을 넣습니다.</p>
+<ul>
+  <li><b>팀 추가</b>를 눌러 곡 제목과 팀원 이름을 적습니다. 팀원이 세 명 이상이면 <b>팀원 칸 추가</b>를 누릅니다.</li>
+  <li><b>여러 팀 한꺼번에 넣기</b>에는 엑셀이나 한글 표에서 복사한 내용을 그대로 붙일 수 있습니다. 한 줄이 한 팀입니다.</li>
+  <li>발표 순서는 ↑ ↓ 단추로 옮기거나 <b>순서 무작위로 섞기</b>로 추첨합니다.</li>
+  <li>대회 이름과 심사 코드도 이 화면에서 바꿉니다.</li>
+  <li>고친 뒤에는 화면 아래의 <b>저장</b>을 눌러야 반영됩니다.</li>
+</ul>
+
+<h3>5. 시험해 보기</h3>
+<p>두 사람 이름으로 한두 팀을 채점해 보고 결과 화면과 발표 화면을 확인합니다. 시험 점수는 구글 시트 <code>심사기록</code> 탭에서 머리글만 남기고 줄을 지우면 없어집니다.</p>
+
+<h2>당일 쓰는 법</h2>
+<h3>채점관</h3>
+<ul>
+  <li>이름은 매번 똑같이 써야 앞서 낸 점수를 고칠 수 있습니다.</li>
+  <li>항목마다 수준을 누르면 점수가 들어가고, 막대나 −, + 단추로 구간 안에서 조정합니다.</li>
+  <li><b>점수 제출</b>을 누르면 다음 팀으로 넘어갑니다. 제출 전 점수는 기기에 남아 있어 화면을 닫아도 사라지지 않습니다.</li>
+</ul>
+<h3>진행 교사</h3>
+<ul>
+  <li>결과 화면에서 학년별 순위, 항목별 평균, 채점 인원, 채점관별 총점을 봅니다. 줄을 누르면 채점관별 점수와 한줄평이 펼쳐집니다.</li>
+  <li><b>채점표 인쇄</b>는 학년마다 A4 한 쪽으로 나옵니다.</li>
+  <li><b>발표 화면</b>은 학년별로 2등, 1등 순으로 공개합니다. 화면을 누르거나 → 키로 넘기고, ← 키로 되돌리고, Esc로 닫습니다.</li>
+</ul>
+
+<h2>순위 규칙</h2>
+<ul>
+  <li>팀 점수는 그 팀을 채점한 사람들의 총점 평균입니다. 채점관 수는 몇 명이든 되고 팀마다 달라도 됩니다.</li>
+  <li>총점 평균이 같으면 과학 개념 정확성 평균, 그다음 창의성과 독창성 평균이 높은 팀이 앞섭니다.</li>
+  <li>그래도 같으면 공동 순위입니다. 공동 1등이 나오면 2등은 비게 되고 결과 화면에 알림이 뜹니다.</li>
+  <li>다른 팀보다 채점 인원이 적은 팀은 결과 화면에 따로 표시됩니다.</li>
+</ul>
+
+<h2>알아 둘 점</h2>
+<ul>
+  <li>채점이 시작된 뒤에도 발표 순서, 곡 제목, 팀원 이름은 바꿀 수 있습니다. 점수는 팀에 그대로 붙어 있습니다.</li>
+  <li>점수가 들어온 팀을 지우면 그 점수는 집계에서 빠집니다. 지울 때 한 번 더 확인합니다.</li>
+  <li>채점관은 처음 들어올 때 팀 목록을 받습니다. 채점 도중 팀을 고쳤다면 채점관에게 화면을 새로 고치라고 알려 주세요.</li>
+  <li>관리자 코드는 구글 시트 <code>설정</code> 탭에서만 바꿀 수 있습니다.</li>
+  <li><code>Judge.gs</code>를 고친 뒤에는 <b>배포 → 배포 관리 → 수정 → 버전: 새 버전</b>으로 다시 배포해야 반영됩니다. 주소는 그대로입니다.</li>
+  <li>"심사 서버에 연결하지 못했습니다"가 뜨면 배포의 액세스 권한이 <b>모든 사용자</b>인지, 주소가 <code>/exec</code>로 끝나는지 확인합니다.</li>
+  <li>채점 기준 문구나 배점을 바꾸려면 <code>judge.html</code>과 <code>Judge.gs</code>에 든 <code>RUBRIC</code> 표를 똑같이 고쳐야 합니다.</li>
+</ul>
+</main>
+</body>
+</html>
