@@ -239,6 +239,86 @@ table { border-collapse: collapse; width: 100%; }
 dialog.sheet.narrow { width: min(620px, calc(100% - 16px)); }
 .p-help { margin-bottom: 14px; color: var(--ink-2); }
 
+/* 종이 점수 넣기 */
+.wrap.wide.paper { padding-bottom: 120px; }
+.paper-judge { display: grid; grid-template-columns: minmax(0, 320px) 1fr; gap: 8px 20px; align-items: end; }
+.paper-judge .field { margin-bottom: 0; }
+.paper-judge p { color: var(--ink-2); font-size: .9375rem; padding-bottom: 4px; }
+.entry { min-width: 900px; }
+.entry th, .entry td { padding: 6px; border-bottom: 1px solid var(--line); text-align: center; vertical-align: middle; }
+.entry th { font-size: .8125rem; font-weight: 600; color: var(--ink-2); border-bottom: 1.5px solid var(--ink); white-space: nowrap; }
+.entry th small { display: block; font-weight: 400; }
+.entry .l { text-align: left; }
+.entry td.title { min-width: 11em; }
+.entry td.title b { display: block; font-weight: 600; line-height: 1.35; }
+.entry td.title small { color: var(--ink-2); font-size: .875rem; }
+.entry .no { margin: 0 auto; }
+.entry input { min-height: 44px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--card); padding: 6px 8px; }
+.entry input.sc { width: 3.6em; text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; font-size: 1.0625rem; }
+.entry input.cm { width: 100%; min-width: 11em; }
+.entry input.bad { border-color: var(--lv3); background: #FDE7E2; }
+.entry .tot { font-weight: 700; font-size: 1.0625rem; min-width: 3em; }
+.entry .state { font-size: .8125rem; white-space: nowrap; color: var(--ink-2); min-width: 7.5em; }
+.entry tr.changed .state { color: var(--lv2); font-weight: 600; }
+.entry tr.saved .state { color: var(--lv0); font-weight: 600; }
+.entry tr.wrong .state { color: var(--lv3); font-weight: 600; }
+.entry-hint { margin-top: 12px; color: var(--ink-2); font-size: .875rem; }
+.paper-bar .bar-in { max-width: 1148px; }
+.paper-bar #pState { font-size: .9375rem; }
+@media (max-width: 640px) { .paper-judge { grid-template-columns: 1fr; } }
+
+/* 지난 대회 고르기, 새 대회 시작 */
+.year-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; font-weight: 600; }
+.pick-year { min-height: 44px; padding: 0 12px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--card); font-weight: 600; max-width: 100%; }
+.set-more { display: flex; gap: 10px 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.set-more p { flex: 1 1 320px; color: var(--ink-2); font-size: .9375rem; }
+.check { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 14px; min-height: 44px; cursor: pointer; }
+.check input { width: 20px; height: 20px; margin: 3px 0 0; flex: none; }
+.check small { display: block; color: var(--ink-2); }
+.checks { display: flex; gap: 6px 22px; flex-wrap: wrap; border: 0; padding: 0; margin: 0 0 14px; }
+.checks legend { font-weight: 600; margin-bottom: 6px; padding: 0; }
+.checks .check { margin-bottom: 0; align-items: center; }
+.checks .check input { margin: 0; }
+.btn.sure { background: #7A2414; border-color: #7A2414; color: #fff; }
+
+/* 종이 채점표 (인쇄할 때만 보임, A4 가로, 흑백) */
+#printArea { display: none; }
+.sheet-page { color: #000; font-size: 9.5pt; line-height: 1.3; }
+.sp-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 8mm; margin-bottom: 2.5mm; }
+.sp-head h1 { font-size: 14pt; font-weight: 700; line-height: 1.2; }
+.sp-head h1 b { font-size: 18pt; margin: 0 1mm; }
+.sp-head h1 small { font-size: 10pt; font-weight: 400; margin-left: 2mm; }
+.sp-judge { font-size: 11pt; white-space: nowrap; }
+.sp-judge span { display: inline-block; min-width: 42mm; min-height: 6.5mm; border-bottom: .4mm solid #000; margin: 0 5mm 0 2mm; padding: 0 2mm; font-weight: 700; text-align: center; vertical-align: bottom; }
+.sp-judge span:last-child { margin-right: 0; }
+table.sp { table-layout: fixed; border: .5mm solid #000; }
+.sp col.c-no { width: 11mm; }
+.sp col.c-title { width: 66mm; }
+.sp col.c-sc { width: 23mm; }
+.sp th, .sp td { border: .25mm solid #000; padding: .8mm 1.5mm; text-align: center; vertical-align: middle; }
+.sp thead th { background: #E6E6E6; font-weight: 700; font-size: 9pt; line-height: 1.25; }
+.sp thead th b { display: block; font-size: 10pt; }
+.sp tr.band th { text-align: right; font-weight: 500; font-size: 8pt; padding: .3mm 2mm; background: #F3F3F3; }
+.sp tr.band td { font-size: 8pt; padding: .3mm 1mm; font-variant-numeric: tabular-nums; }
+.sp tr.band td[rowspan] { font-size: 7.5pt; color: #444; }
+.sp tbody td { height: var(--row, 12mm); padding-top: .3mm; padding-bottom: .3mm; }
+.sp tbody tr:first-child td { border-top: .5mm solid #000; }
+.sp td.sp-no { font-weight: 700; font-size: 11pt; }
+.sp td.t { text-align: left; }
+.sp td.t b { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 9.5pt; line-height: 1.2; }
+.sp td.t small { display: block; font-size: 8pt; line-height: 1.2; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tight .sp td.t b { -webkit-line-clamp: 1; }
+.sp td.sum { background: #F3F3F3; }
+.sp-notes { margin: 2mm 0 0; padding-left: 4.5mm; font-size: 8pt; line-height: 1.4; color: #222; }
+@media print {
+  body.print-sheet #app, body.print-sheet dialog, body.print-sheet .toast { display: none !important; }
+  body.print-sheet #printArea { display: block; }
+  .sheet-page { break-after: page; }
+  .sheet-page:last-child { break-after: auto; }
+  .sheet-page, .sp tr, .sp-notes { break-inside: avoid; }
+  .sp thead th, .sp tr.band th, .sp td.sum { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
 /* 발표 화면 */
 .stage {
   position: fixed; inset: 0; z-index: 50; background: radial-gradient(ellipse 70% 60% at 50% 42%, #24377A 0%, var(--stage) 70%);
@@ -326,9 +406,12 @@ dialog.sheet.narrow { width: min(620px, calc(100% - 16px)); }
 </head>
 <body>
 <div id="app"></div>
+<div id="printArea" aria-hidden="true"></div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <dialog id="rubricDlg" class="sheet"></dialog>
 <dialog id="pasteDlg" class="sheet narrow"></dialog>
+<dialog id="sheetDlg" class="sheet narrow"></dialog>
+<dialog id="yearDlg" class="sheet narrow"></dialog>
 
 <script>
 /* ============================================================
@@ -542,8 +625,8 @@ const f1 = v => v == null ? '–' : v.toFixed(1);
 const S = {
   title: '과학송 경연대회', judge: '', code: '', roster: [], mine: {}, drafts: {},
   grade: null, team: null, work: null, busy: false,
-  admin: { code: '', data: null, agg: null, at: '', timer: 0, open: {} },
-  manage: null
+  admin: { code: '', data: null, agg: null, at: '', timer: 0, open: {}, archives: [], arch: null },   // arch: 보고 있는 지난 대회
+  manage: null, paper: null
 };
 
 /* ---------- 서버 통신 ---------- */
@@ -586,7 +669,7 @@ function jsonp(action, data) {
 
 /* 연습 모드: 서버 없이 같은 흐름을 이 기기 안에서 흉내 냅니다 */
 const DEMO = {
-  title: '2026 과학송 경연대회', judgeCode: '0000', adminCode: 'admin',
+  title: new Date().getFullYear() + ' 과학송 경연대회', judgeCode: '0000', adminCode: 'admin',
   roster: [
     [1, 1, '김가람, 이나래', '판이 움직여요'], [1, 2, '박다온, 최라희', '광합성 레시피'], [1, 3, '정마루, 한바다', '물질의 세 가지 상태'],
     [1, 4, '오사랑, 윤아름', '빛의 삼원색 송'], [1, 5, '강자람, 서차니', '지구계 한 바퀴'],
@@ -617,9 +700,39 @@ function demoApi(action, d) {
       store.set('ssj.demo.records', recs);
       return resolve({ ok: true, updated: i >= 0, record: rec });
     }
-    if (action === 'results' || action === 'saveRoster') {
+    if (action === 'results' || action === 'saveRoster' || action === 'submitBatch' || action === 'archive') {
       if (code !== DEMO.adminCode) return bad('관리자 코드가 맞지 않습니다.');
-      if (action === 'results') return resolve({ ok: true, title: cfg.title, judgeCode: cfg.judgeCode, roster, records: recs, at: new Date().toISOString() });
+      const olds = store.get('ssj.demo.archives', []);
+      const brief = () => olds.map(a => ({ label: a.label, title: a.title, at: a.at, teams: a.roster.length, records: a.records.length })).reverse();
+      if (action === 'results') {
+        const now = { ok: true, title: cfg.title, judgeCode: cfg.judgeCode, archives: brief(), roster, records: recs, at: new Date().toISOString() };
+        if (!d.archive) return resolve(now);
+        const a = olds.find(x => x.label === d.archive);
+        if (!a) return resolve({ ok: false, code: 'NO_ARCHIVE', error: '보관된 대회를 찾지 못했습니다: ' + d.archive });
+        return resolve(Object.assign(now, { archive: a.label, title: a.title, roster: a.roster, records: a.records, at: a.at }));
+      }
+      if (action === 'submitBatch') {
+        const judge = cleanName(d.judge), at = new Date().toISOString(), fresh = [];
+        for (const it of d.items) {
+          const t = roster.find(x => x.id === it.team);
+          if (!t) return resolve({ ok: false, code: 'NO_TEAM', error: '순서표에 없는 팀이 있습니다. 화면을 새로 고친 뒤 다시 해 주세요.' });
+          fresh.push({ team: t.id, grade: t.grade, order: t.order, judge, scores: it.scores.map(Number), comment: String(it.comment || '').trim(), at });
+        }
+        fresh.forEach(rec => { const i = recs.findIndex(r => recKey(r) === rec.team && r.judge === rec.judge); if (i >= 0) recs[i] = rec; else recs.push(rec); });
+        store.set('ssj.demo.records', recs);
+        return resolve({ ok: true, saved: fresh.length, records: fresh });
+      }
+      if (action === 'archive') {
+        const label = String(d.label || '').replace(/\s+/g, ' ').trim();
+        if (!/^[0-9A-Za-z가-힣 _-]{1,20}$/.test(label)) return resolve({ ok: false, code: 'BAD_ARCHIVE', error: '보관 이름은 한글, 영문, 숫자로 20자까지 적어 주세요.' });
+        if (olds.some(a => a.label === label)) return resolve({ ok: false, code: 'DUP_ARCHIVE', error: '"' + label + '" 이라는 보관이 이미 있습니다. 다른 이름을 적어 주세요.' });
+        if (!roster.length && !recs.length) return resolve({ ok: false, code: 'NOTHING', error: '보관할 팀이나 점수가 없습니다.' });
+        const at = new Date().toISOString(), title = String(d.newTitle == null ? cfg.title : d.newTitle).trim() || cfg.title, next = d.keepRoster ? roster : [];
+        olds.push({ label, title: cfg.title, at, roster, records: recs });
+        store.set('ssj.demo.archives', olds); store.set('ssj.demo.roster', next); store.set('ssj.demo.records', []);
+        store.set('ssj.demo.config', { title, judgeCode: cfg.judgeCode });
+        return resolve({ ok: true, label, title, judgeCode: cfg.judgeCode, roster: next, records: [], archives: brief(), at });
+      }
       if (d.judgeCode === DEMO.adminCode) return resolve({ ok: false, code: 'BAD_CONFIG', error: '심사 코드는 관리자 코드와 달라야 합니다.' });
       const seen = {}, count = {};
       const next = d.roster.map(t => {
@@ -862,7 +975,7 @@ async function submitScore() {
 
 function viewAdminGate(err) {
   app.innerHTML = demoNote() + '<div class="gate"><form class="gate-card" id="adminForm">' +
-    '<h1 class="gate-title">' + (ROUTE === '#manage' ? '팀 편집' : '심사 결과') + '</h1><div class="staff" aria-hidden="true"></div>' +
+    '<h1 class="gate-title">' + (ROUTE === '#manage' ? '팀 편집' : ROUTE === '#paper' ? '종이 점수 넣기' : '심사 결과') + '</h1><div class="staff" aria-hidden="true"></div>' +
     (err ? '<div class="alert err" role="alert">' + esc(err) + '</div>' : '') +
     '<label class="field"><span>관리자 코드</span><input id="aCode" type="password" autocomplete="off" required></label>' +
     '<button class="btn primary" id="aGo">열기</button>' +
@@ -870,34 +983,46 @@ function viewAdminGate(err) {
   $('#adminForm').onsubmit = e => { e.preventDefault(); S.admin.code = $('#aCode').value.trim(); loadResults(true); };
 }
 
-async function loadResults(fromGate) {
-  const A = S.admin;
+/** pick: 불러올 지난 대회의 보관 이름. '' 이면 지금 대회, 안 주면 보고 있던 것을 다시 불러옵니다. */
+async function loadResults(fromGate, pick) {
+  const A = S.admin, from = ROUTE;
+  const archive = pick === undefined ? (A.arch ? A.arch.label : '') : pick;
   const btn = $('#aGo') || $('#refresh'); if (btn) btn.disabled = true;
   let out;
-  try { out = await api('results', { code: A.code }); }
+  try { out = await api('results', archive ? { code: A.code, archive } : { code: A.code }); }
   catch (e) { out = { ok: false, error: e.message }; }
+  if (out.ok && archive && out.archive !== archive) out = { ok: false, error: '지난 대회를 보려면 심사 서버의 Code.gs 를 새 파일로 바꿔 다시 배포해야 합니다.' };
   if (!out.ok) {
     if (fromGate || out.code === 'BAD_CODE' || !A.data) { try { sessionStorage.removeItem('ssj.admin'); } catch (e) {} return viewAdminGate(out.error); }
     if (btn) btn.disabled = false;
     const box = $('#resErr'); if (box) box.innerHTML = '<div class="alert err" role="alert">새로 불러오지 못했습니다. ' + esc(out.error || '') + '</div>';
+    const sel = $('#pickYear'); if (sel) { sel.disabled = false; sel.value = A.arch ? A.arch.label : ''; }
     return;
   }
   try { sessionStorage.setItem('ssj.admin', A.code); } catch (e) {}
-  S.title = out.title || S.title;
-  A.data = out; A.at = out.at; A.agg = aggregate(out.roster, out.records, C);
+  A.archives = out.archives || [];
+  if (archive) A.arch = { label: archive, data: out, agg: aggregate(out.roster, out.records, C) };
+  else {
+    A.arch = null;
+    S.title = out.title || S.title;
+    A.data = out; A.at = out.at; A.agg = aggregate(out.roster, out.records, C);
+  }
+  if (!fromGate && ROUTE !== from) return;       // 기다리는 사이 다른 화면으로 옮겼으면 그 화면을 다시 그리지 않는다
   showAdmin();
 }
 
 function showAdmin() {
   if (ROUTE === '#manage') { if (!S.manage || !S.manage.dirty) buildManage(); viewManage(); }
+  else if (ROUTE === '#paper') viewPaper();
   else viewResults();
 }
 
 function viewResults() {
-  const A = S.admin, agg = A.agg;
+  const A = S.admin, V = A.arch || A, agg = V.agg;
+  const title = A.arch ? V.data.title : S.title, shownAt = A.arch ? V.data.at : A.at, years = A.archives || [];
   const grades = Object.keys(agg.grades).map(Number).sort((a, b) => a - b).map(g => agg.grades[g]);
-  const time = A.at ? new Date(A.at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '';
-  const day = new Date(A.at || Date.now()).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+  const time = shownAt ? new Date(shownAt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '';
+  const day = new Date(shownAt || Date.now()).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 
   const gradeHtml = g => {
     const firsts = g.teams.filter(t => t.rank === 1), seconds = g.teams.filter(t => t.rank === 2);
@@ -934,9 +1059,13 @@ function viewResults() {
   };
 
   app.innerHTML = demoNote() + '<div class="wrap wide">' +
-    '<header class="top"><div><h1>' + esc(S.title) + ' 심사 결과</h1><p>' + day + ' ' + time + ' 기준, 채점관 ' + agg.judges.length + '명 참여</p></div>' +
-    '<div class="top-actions"><label class="auto"><input type="checkbox" id="auto"' + (A.timer ? ' checked' : '') + '> 20초마다 새로 고침</label>' +
-    '<a class="btn" href="#manage">팀 편집</a><button class="btn" id="refresh">새로 고침</button><button class="btn" id="print">채점표 인쇄</button><button class="btn primary" id="reveal">발표 화면</button></div></header>' +
+    '<header class="top"><div><h1>' + esc(title) + ' 심사 결과</h1><p>' + day + ' ' + time + (A.arch ? ' 보관' : ' 기준') + ', 채점관 ' + agg.judges.length + '명 참여</p></div>' +
+    '<div class="top-actions">' + (A.arch ? '' : '<label class="auto"><input type="checkbox" id="auto"' + (A.timer ? ' checked' : '') + '> 20초마다 새로 고침</label>' +
+      '<a class="btn" href="#manage">팀 편집</a><button class="btn" id="sheet">종이 채점표</button><a class="btn" href="#paper">종이 점수 넣기</a><button class="btn" id="refresh">새로 고침</button>') +
+    '<button class="btn" id="print">결과표 인쇄</button><button class="btn primary" id="reveal">발표 화면</button></div></header>' +
+    (years.length ? '<p class="year-row no-print"><label for="pickYear">대회</label><select id="pickYear" class="pick-year"><option value="">지금 대회: ' + esc(S.title) + '</option>' +
+      years.map(y => '<option value="' + esc(y.label) + '"' + (A.arch && A.arch.label === y.label ? ' selected' : '') + '>보관: ' + esc(y.title.indexOf(y.label) >= 0 ? y.title : y.label + ' · ' + y.title) + '</option>').join('') + '</select></p>' : '') +
+    (A.arch ? '<div class="alert no-print">보관해 둔 지난 대회입니다. 점수와 팀은 고칠 수 없고, 결과표 인쇄와 발표 화면은 그대로 쓸 수 있습니다.</div>' : '') +
     '<div id="resErr"></div>' +
     (grades.length ? grades.map(gradeHtml).join('') : '<p class="empty">아직 등록된 팀이 없습니다. <a href="#manage">팀 편집</a>에서 팀을 넣어 주세요.</p>') +
     (agg.judges.length ? '<section class="grade-block no-print"><h2>채점관 제출 현황</h2><p class="grade-meta">채점관이 학년별로 몇 팀을 제출했는지 보여 줍니다.</p><div class="scroll-x"><table class="matrix"><thead><tr><th class="l">채점관</th>' +
@@ -944,10 +1073,15 @@ function viewResults() {
       agg.judges.map(j => '<tr><td class="l">' + esc(j.judge) + '</td>' + grades.map(g => '<td>' + (j.counts[g.grade] || 0) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div></section>' : '') +
     '<p class="gate-foot no-print"><a href="#">채점 화면으로</a></p></div>';
 
-  $('#refresh').onclick = () => loadResults(false);
-  $('#print').onclick = () => window.print();
+  if (!A.arch) {
+    $('#refresh').onclick = () => loadResults(false);
+    $('#sheet').onclick = openSheetDlg;
+    $('#auto').onchange = e => { clearInterval(A.timer); A.timer = e.target.checked ? setInterval(() => { if (!$('.stage')) loadResults(false); }, 20000) : 0; };
+  }
+  $('#print').onclick = () => { clearSheets(); window.print(); };
   $('#reveal').onclick = openStage;
-  $('#auto').onchange = e => { clearInterval(A.timer); A.timer = e.target.checked ? setInterval(() => { if (!$('.stage')) loadResults(false); }, 20000) : 0; };
+  const pickYear = $('#pickYear');
+  if (pickYear) pickYear.onchange = () => { clearInterval(A.timer); A.timer = 0; pickYear.disabled = true; loadResults(false, pickYear.value); };
   $$('.rank tr.row').forEach(tr => {
     const toggle = () => { const k = tr.dataset.k; A.open[k] = !A.open[k]; tr.setAttribute('aria-expanded', String(!!A.open[k])); tr.nextElementSibling.hidden = !A.open[k]; };
     tr.onclick = toggle;
@@ -984,12 +1118,13 @@ function viewManage(focusSel) {
 
   app.innerHTML = demoNote() + '<div class="wrap wide manage">' +
     '<header class="top"><div><h1>팀 편집</h1><p>학년별로 팀, 팀원, 곡 제목을 넣고 발표 순서를 정합니다.</p></div>' +
-    '<div class="top-actions"><a class="btn" href="#result">결과 보기</a></div></header><div id="mErr"></div>' +
+    '<div class="top-actions"><button class="btn" id="mSheet">종이 채점표</button><a class="btn" href="#paper">종이 점수 넣기</a><a class="btn" href="#result">결과 보기</a></div></header><div id="mErr"></div>' +
     '<section class="grade-block"><h2>대회 설정</h2><div class="set-grid">' +
     '<label class="field"><span>대회 이름</span><input id="mTitle" maxlength="60" value="' + esc(M.title) + '"></label>' +
     '<label class="field"><span>심사 코드 (채점관에게 알려 줌)</span><input id="mCode" maxlength="20" autocomplete="off" value="' + esc(M.judgeCode) + '"></label>' +
     '<label class="field"><span>채점관에게 보낼 주소</span><input id="mLink" readonly value="' + esc(GAS ? (A.data.appUrl || '') : location.href.split('#')[0]) + '"></label>' +
-    '</div></section>' +
+    '</div><div class="set-more"><p>대회를 마쳤거나 시험 채점을 지우고 싶으면, 지금의 팀과 점수를 보관하고 새로 시작할 수 있습니다.' +
+    ((A.archives || []).length ? ' 보관해 둔 대회: ' + A.archives.map(a => esc(a.label)).join(', ') : '') + '</p><button type="button" class="btn" id="mYear">새 대회 시작</button></div></section>' +
     '<section class="grade-block"><nav class="grades" role="tablist" aria-label="학년">' + grades.map(g => {
       const ts = M.teams.filter(t => t.grade === g);
       return '<button role="tab" aria-selected="' + (g === M.grade) + '" data-g="' + g + '">' + g + '학년<small class="num" data-count="' + g + '">' + ts.length + '팀, ' + peopleIn(ts) + '명</small></button>';
@@ -1052,6 +1187,8 @@ function viewManage(focusSel) {
     dirty(); viewManage('#mShuffle'); toast(M.grade + '학년 발표 순서를 섞었습니다. 저장을 눌러야 반영됩니다.');
   };
   $('#mPaste').onclick = openPaste;
+  $('#mSheet').onclick = openSheetDlg;
+  $('#mYear').onclick = openYearDlg;
   $('#mRevert').onclick = () => { buildManage(); viewManage(); };
   $('#mSave').onclick = saveManage;
   if (focusSel) { const el = $(focusSel); if (el) el.focus(); }
@@ -1119,10 +1256,364 @@ async function saveManage() {
   toast('저장했습니다. 모두 ' + out.roster.length + '팀');
 }
 
+/* ---------- 관리자: 종이 채점표 인쇄 ---------- */
+
+const SHEET_ROOM = 134;   // A4 가로 한 쪽에서 팀 줄이 쓸 수 있는 높이(mm). 머리글, 점수 구간, 유의사항을 뺀 나머지.
+const SHEET_MAX = 15;     // 한 쪽에 넣는 팀 수의 한도. 넘으면 쪽을 고르게 나눕니다.
+
+/** 종이 채점표 한 벌(한 학년, 채점관 한 명)의 쪽들. 팀 수에 맞춰 줄 높이를 정해 쪽마다 꼭 한 장에 들어가게 합니다. */
+function sheetPages(title, grade, teams, judge) {
+  const parts = Math.max(1, Math.ceil(teams.length / SHEET_MAX)), size = Math.ceil(teams.length / parts) || 1;
+  const rowH = Math.max(8.5, Math.min(16, Math.floor(SHEET_ROOM / size * 2) / 2));
+  const out = [];
+  for (let p = 0; p < parts; p++) out.push(sheetPage(title, grade, teams.slice(p * size, (p + 1) * size), judge, rowH, parts > 1 ? (p + 1) + ' / ' + parts + '쪽' : ''));
+  return out;
+}
+function sheetPage(title, grade, teams, judge, rowH, pageNo) {
+  return '<section class="sheet-page' + (rowH < 12.5 ? ' tight' : '') + '" style="--row:' + rowH + 'mm">' +
+    '<header class="sp-head"><h1>' + esc(title) + ' <b>' + grade + '학년</b> 채점표' + (pageNo ? ' <small>' + pageNo + '</small>' : '') + '</h1>' +
+    '<p class="sp-judge">채점관 <span>' + esc(judge) + '</span> 서명 <span></span></p></header>' +
+    '<table class="sp"><colgroup><col class="c-no"><col class="c-title">' + C.map(() => '<col class="c-sc">').join('') + '<col class="c-sc"><col></colgroup>' +
+    '<thead><tr><th>순서</th><th>곡 제목 / 팀원</th>' + C.map(c => '<th>' + esc(c.name) + '<b>' + c.max + '점</b></th>').join('') +
+    '<th>총점<b>' + MAX_TOTAL + '점</b></th><th>한줄평</th></tr>' +
+    RUBRIC.levels.map((l, j) => '<tr class="band"><th colspan="2">' + esc(l) + '</th>' +
+      C.map(c => '<td>' + c.bands[j][0] + '–' + c.bands[j][1] + '</td>').join('') +
+      (j === 0 ? '<td rowspan="' + RUBRIC.levels.length + '">다섯 항목의 합</td><td rowspan="' + RUBRIC.levels.length + '">좋았던 점, 아쉬운 점</td>' : '') + '</tr>').join('') +
+    '</thead><tbody>' + teams.map(t => '<tr><td class="sp-no">' + t.order + '</td><td class="t"><b>' + esc(t.title || '(제목 없음)') + '</b><small>' + esc(t.members) + '</small></td>' +
+      C.map(() => '<td></td>').join('') + '<td class="sum"></td><td></td></tr>').join('') + '</tbody></table>' +
+    '<ul class="sp-notes">' + RUBRIC.notes.slice(0, 3).map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></section>';
+}
+
+/** 인쇄할 채점표를 만들어 인쇄 영역에 넣습니다. 채점관마다 고른 학년을 한 벌씩. */
+function buildSheets(grades, judges) {
+  const A = S.admin, roster = A.data.roster, pages = [];
+  judges.forEach(j => grades.forEach(g => { sheetPages(A.data.title || S.title, g, roster.filter(t => t.grade === g), j).forEach(p => pages.push(p)); }));
+  $('#printArea').innerHTML = pages.join('');
+  document.body.classList.add('print-sheet');
+  let st = $('#sheetPageStyle');
+  if (!st) { st = document.createElement('style'); st.id = 'sheetPageStyle'; document.head.appendChild(st); }
+  st.textContent = '@page { size: A4 landscape; margin: 9mm 10mm; }';
+  return pages.length;
+}
+function clearSheets() {
+  document.body.classList.remove('print-sheet');
+  $('#printArea').innerHTML = '';
+  const st = $('#sheetPageStyle'); if (st) st.remove();
+}
+function printSheets(grades, judges) {
+  buildSheets(grades, judges);
+  const done = () => { window.removeEventListener('afterprint', done); clearSheets(); };
+  window.addEventListener('afterprint', done);
+  const ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+  ready.then(() => window.print());   // 글꼴이 늦게 붙으면 줄 수가 달라져 쪽이 밀립니다
+}
+function sheetJudges(text) {
+  const names = [];
+  String(text || '').split(/[,，、\n]+/).map(cleanName).forEach(n => { if (n && names.indexOf(n) < 0) names.push(n); });
+  return names.length ? names : [''];
+}
+
+function openSheetDlg() {
+  const A = S.admin, d = $('#sheetDlg'), gs = gradesOf(A.data.roster);
+  if (!gs.length) return toast('먼저 팀 편집에서 팀을 넣고 저장해 주세요.');
+  const countIn = g => A.data.roster.filter(t => t.grade === g).length;
+  d.innerHTML = '<div class="sheet-head"><h2>종이 채점표 인쇄</h2><button class="btn" id="shClose">닫기</button></div><div class="sheet-body">' +
+    '<p class="p-help">채점관이 손으로 적는 채점표입니다. A4 가로이고 학년마다 한 장씩 나옵니다. 적어 온 점수는 <b>종이 점수 넣기</b>에서 옮겨 넣으면 온라인 점수와 함께 집계됩니다.</p>' +
+    (S.manage && S.manage.dirty ? '<div class="alert">팀 편집에 저장하지 않은 변경이 있습니다. 채점표에는 마지막으로 저장한 팀 목록이 들어갑니다.</div>' : '') +
+    '<fieldset class="checks"><legend>학년</legend>' + gs.map(g => '<label class="check"><input type="checkbox" class="shG" value="' + g + '" checked> <span>' + g + '학년 (' + countIn(g) + '팀)</span></label>').join('') + '</fieldset>' +
+    '<label class="field"><span>채점관 이름 (선택)</span><input id="shNames" maxlength="200" autocomplete="off" placeholder="비워 두면 이름 칸이 빈칸으로 나옵니다"></label>' +
+    '<p id="shInfo" class="grade-meta"></p><button class="btn primary" id="shGo">인쇄</button>' +
+    '<p class="entry-hint">여러 명의 이름을 쉼표로 나눠 적으면 사람마다 한 벌씩 나옵니다. 이름을 비워 두고 프린터에서 부수를 정해도 됩니다. 인쇄 창에서 방향이 가로인지 확인해 주세요.</p></div>';
+  const picked = () => $$('.shG', d).filter(x => x.checked).map(x => Number(x.value));
+  const paint = () => {
+    const g = picked(), names = sheetJudges($('#shNames', d).value), named = names[0] !== '';
+    $('#shInfo', d).textContent = !g.length ? '학년을 하나 이상 골라 주세요.'
+      : g.length + '개 학년' + (named ? ' × 채점관 ' + names.length + '명' : '') + ' = 채점표 ' + g.length * names.length + '벌' +
+        (g.some(x => countIn(x) > SHEET_MAX) ? ' (' + SHEET_MAX + '팀이 넘는 학년은 여러 쪽으로 나뉩니다)' : '');
+    $('#shGo', d).disabled = !g.length;
+  };
+  $$('.shG', d).forEach(x => { x.onchange = paint; });
+  $('#shNames', d).oninput = paint;
+  $('#shClose', d).onclick = () => d.close();
+  $('#shGo', d).onclick = () => { const g = picked(), names = sheetJudges($('#shNames', d).value); d.close(); printSheets(g, names); };
+  paint();
+  d.showModal();
+}
+
+/* ---------- 관리자: 종이 점수 넣기 ---------- */
+
+const PAPER_STATE = { empty: '', saved: '저장됨', fresh: '저장 전', changed: '고침 · 저장 전', partial: '덜 채움', wrong: '점수 확인' };
+const oneLine = s => String(s == null ? '' : s).replace(/\s+/g, ' ').trim();
+
+/** 그 채점관이 이미 낸 점수 (팀별로 가장 최근 것) */
+function savedOf(judge) {
+  const map = {};
+  S.admin.data.records.forEach(r => {
+    if (oneLine(r.judge) !== judge) return;
+    const k = recKey(r);
+    if (!map[k] || String(r.at || '') >= String(map[k].at || '')) map[k] = r;
+  });
+  return map;
+}
+/** 그 채점관의 입력 표. 처음 열 때는 이미 낸 점수로 채워 둡니다. */
+function paperSet(judge) {
+  const P = S.paper;
+  if (!P.sets[judge]) {
+    const saved = savedOf(judge), set = {};
+    Object.keys(saved).forEach(k => { set[k] = { scores: saved[k].scores.map(String), comment: saved[k].comment || '' }; });
+    P.sets[judge] = set;
+  }
+  return P.sets[judge];
+}
+/** 한 팀의 입력 상태: empty(빈 줄) kept(지웠지만 저장된 점수 유지) saved fresh changed partial wrong */
+function paperRow(set, saved, t) {
+  const k = keyOf(t), w = set[k], old = saved[k];
+  const vals = C.map((c, i) => w ? oneLine(w.scores[i]) : '');
+  const comment = w ? oneLine(w.comment) : '';
+  const bad = vals.map((v, i) => v !== '' && !(/^\d{1,2}$/.test(v) && Number(v) <= C[i].max));
+  const miss = vals.map(v => v === '');
+  const full = !bad.some(Boolean) && !miss.some(Boolean);
+  const nums = full ? vals.map(Number) : null;
+  let state;
+  if (miss.every(Boolean) && !comment) state = old ? 'kept' : 'empty';
+  else if (bad.some(Boolean)) state = 'wrong';
+  else if (!full) state = 'partial';
+  else if (old && nums.every((v, i) => v === Number(old.scores[i])) && comment === oneLine(old.comment)) state = 'saved';
+  else state = old ? 'changed' : 'fresh';
+  return { key: k, team: t, comment, bad, miss, nums, state, total: nums ? totalOf(nums) : null };
+}
+function paperRows(judge) {
+  const set = S.paper.sets[judge] || {}, saved = savedOf(judge);
+  return S.admin.data.roster.map(t => paperRow(set, saved, t));
+}
+function paperDirty() {
+  return !!S.paper && Object.keys(S.paper.sets).some(j => paperRows(j).some(r => ['fresh', 'changed', 'partial', 'wrong'].indexOf(r.state) >= 0));
+}
+function mergeRecords(recs) {
+  const A = S.admin;
+  (recs || []).forEach(rec => {
+    A.data.records = A.data.records.filter(r => !(recKey(r) === recKey(rec) && oneLine(r.judge) === oneLine(rec.judge)));
+    A.data.records.push(rec);
+  });
+  A.agg = aggregate(A.data.roster, A.data.records, C);
+}
+
+function viewPaper(focusSel) {
+  const A = S.admin, P = S.paper || (S.paper = { judge: '', grade: null, sets: {}, strict: false });
+  const roster = A.data.roster, gs = gradesOf(roster);
+  if (gs.indexOf(P.grade) < 0) P.grade = gs[0] || null;
+  const teams = roster.filter(t => t.grade === P.grade);
+  const set = P.judge ? paperSet(P.judge) : {};
+  const had = P.judge ? Object.keys(savedOf(P.judge)).length : 0;
+  const names = Array.from(new Set(A.agg.judges.map(j => j.judge).concat(Object.keys(P.sets)))).sort();
+
+  app.innerHTML = demoNote() + '<div class="wrap wide paper">' +
+    '<header class="top"><div><h1>종이 점수 넣기</h1><p>종이 채점표에 적힌 점수를 채점관별로 옮겨 넣습니다. 온라인 점수와 함께 집계됩니다.</p></div>' +
+    '<div class="top-actions"><button class="btn" id="pSheet">종이 채점표</button><a class="btn" href="#result">결과 보기</a></div></header><div id="pErr"></div>' +
+    (!gs.length ? '<p class="empty">아직 등록된 팀이 없습니다. <a href="#manage">팀 편집</a>에서 팀을 넣어 주세요.</p>' :
+    '<section class="grade-block"><form class="paper-judge" id="pForm"><label class="field"><span>채점관 이름</span>' +
+    '<input id="pJudge" list="pNames" maxlength="20" autocomplete="off" placeholder="종이에 적힌 이름" value="' + esc(P.judge) + '">' +
+    '<datalist id="pNames">' + names.map(n => '<option value="' + esc(n) + '">').join('') + '</datalist></label>' +
+    '<p>' + (!P.judge ? '이름을 적고 Enter 를 누르면 입력 표가 열립니다. 온라인으로 채점한 사람과 같은 이름을 쓰면 같은 사람으로 집계됩니다.'
+      : had ? '이 이름으로 이미 ' + had + '팀의 점수가 들어와 있습니다. 표에 그 점수가 채워져 있고, 고쳐서 저장하면 덮어씁니다.'
+      : '새 채점관입니다. 다른 채점관의 종이를 넣으려면 이름을 바꿔 적으면 됩니다. 넣던 점수는 저장할 때까지 남아 있습니다.') + '</p></form></section>' +
+    (P.judge ? '<section class="grade-block"><nav class="grades" role="tablist" aria-label="학년">' + gs.map(g =>
+      '<button role="tab" aria-selected="' + (g === P.grade) + '" data-g="' + g + '">' + g + '학년<small class="num" data-filled="' + g + '"></small></button>').join('') + '</nav>' +
+      '<div class="scroll-x"><table class="entry"><thead><tr><th>순서</th><th class="l">곡 제목과 팀원</th>' +
+      C.map(c => '<th>' + esc(c.short) + '<small>' + c.max + '점</small></th>').join('') + '<th>총점</th><th class="l">한줄평</th><th>상태</th></tr></thead><tbody>' +
+      teams.map(t => {
+        const k = keyOf(t), w = set[k] || { scores: [], comment: '' };
+        return '<tr data-k="' + esc(k) + '"><td><span class="no">' + t.order + '</span></td><td class="l title"><b>' + esc(t.title || '(제목 없음)') + '</b><small>' + esc(t.members) + '</small></td>' +
+          C.map((c, i) => '<td><input class="sc" data-i="' + i + '" inputmode="numeric" autocomplete="off" maxlength="2" aria-label="' + t.order + '번 팀 ' + esc(c.name) + ', ' + c.max + '점 만점" value="' + esc(w.scores[i] == null ? '' : w.scores[i]) + '"></td>').join('') +
+          '<td class="tot num" data-tot></td><td class="l"><input class="cm" maxlength="300" autocomplete="off" aria-label="' + t.order + '번 팀 한줄평" value="' + esc(w.comment || '') + '"></td><td class="state" data-state></td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      '<p class="entry-hint">숫자를 치고 Tab 이나 Enter 로 다음 칸으로 갑니다. 더 칠 숫자가 없으면 저절로 넘어갑니다. ↑↓ 키는 위아래 팀으로 옮깁니다. 총점이 종이에 적힌 총점과 같은지 확인해 주세요.</p></section>' : '')) +
+    '</div><footer class="bar paper-bar"><div class="bar-in"><p id="pState"></p><div class="bar-btns"><button class="btn primary" id="pSave">저장</button></div></div></footer>';
+
+  const saved = P.judge ? savedOf(P.judge) : {};
+  const rowOf = tr => paperRow(set, saved, roster.find(t => keyOf(t) === tr.dataset.k));
+  const paintRow = tr => {
+    const r = rowOf(tr), strictMiss = P.strict && r.state === 'partial';
+    $$('.sc', tr).forEach((inp, i) => inp.classList.toggle('bad', r.bad[i] || (strictMiss && r.miss[i])));
+    $('[data-tot]', tr).textContent = r.total == null ? '–' : r.total;
+    $('[data-state]', tr).textContent = r.state === 'kept' ? '저장된 ' + totalOf(saved[r.key].scores) + '점 유지' : PAPER_STATE[r.state];
+    tr.className = r.state === 'saved' ? 'saved' : (r.state === 'wrong' || strictMiss) ? 'wrong' : (r.state === 'empty' || r.state === 'kept') ? '' : 'changed';
+  };
+  const paintBar = () => {
+    const rows = P.judge ? roster.map(t => paperRow(set, saved, t)) : [];
+    const todo = rows.filter(r => r.state === 'fresh' || r.state === 'changed').length;
+    const stuck = rows.filter(r => r.state === 'partial' || r.state === 'wrong').length;
+    $('#pState').textContent = !P.judge ? '채점관 이름을 먼저 적어 주세요'
+      : todo || stuck ? P.judge + ' 채점관: 저장하지 않은 점수 ' + todo + '팀' + (stuck ? ', 덜 채운 줄 ' + stuck + '팀' : '') : P.judge + ' 채점관: 모두 저장되어 있습니다';
+    $('#pSave').disabled = !(todo || stuck);
+    gs.forEach(g => {
+      const el = $('[data-filled="' + g + '"]'), inG = rows.filter(r => r.team.grade === g);
+      if (el) el.textContent = '입력 ' + inG.filter(r => ['saved', 'fresh', 'changed', 'kept'].indexOf(r.state) >= 0).length + ' / ' + inG.length + '팀';
+    });
+  };
+  const move = (inp, step) => { const all = $$('.entry input'), to = all[all.indexOf(inp) + step]; if (to) { to.focus(); to.select(); } };
+
+  $('#pSheet').onclick = openSheetDlg;
+  $('#pSave').onclick = savePaper;
+  const form = $('#pForm');
+  if (form) {
+    const pick = () => {
+      const name = cleanName($('#pJudge').value);
+      if (name === P.judge) return;
+      P.judge = name; P.strict = false;
+      viewPaper(name ? '.entry input.sc' : '#pJudge');
+    };
+    form.onsubmit = e => { e.preventDefault(); pick(); };
+    $('#pJudge').onchange = pick;
+  }
+  $$('.grades button').forEach(b => { b.onclick = () => { P.grade = Number(b.dataset.g); viewPaper('.entry input.sc'); }; });
+  const body = $('.entry tbody');
+  if (body) {
+    $$('tr', body).forEach(paintRow);
+    body.addEventListener('input', e => {
+      const inp = e.target, tr = inp.closest('tr');
+      const w = set[tr.dataset.k] || (set[tr.dataset.k] = { scores: C.map(() => ''), comment: '' });
+      if (inp.classList.contains('sc')) {
+        const i = Number(inp.dataset.i), v = inp.value.replace(/\D/g, '').slice(0, 2);
+        if (v !== inp.value) inp.value = v;
+        w.scores[i] = v;
+        paintRow(tr); paintBar();
+        // 두 자리를 쳤거나, 뒤에 어떤 숫자를 붙여도 배점을 넘는 숫자면 다음 칸으로
+        if (v !== '' && Number(v) <= C[i].max && (v.length === 2 || v === '0' || Number(v) * 10 > C[i].max)) move(inp, 1);
+      } else { w.comment = inp.value; paintRow(tr); paintBar(); }
+    });
+    body.addEventListener('keydown', e => {
+      const inp = e.target;
+      if (inp.tagName !== 'INPUT' || e.isComposing) return;
+      if (e.key === 'Enter') { e.preventDefault(); move(inp, 1); }
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        const tr = inp.closest('tr'), next = e.key === 'ArrowDown' ? tr.nextElementSibling : tr.previousElementSibling;
+        if (!next) return;
+        e.preventDefault();
+        const to = inp.classList.contains('sc') ? $('.sc[data-i="' + inp.dataset.i + '"]', next) : $('.cm', next);
+        to.focus(); to.select();
+      }
+    });
+  }
+  paintBar();
+  if (focusSel) { const el = $(focusSel); if (el) { el.focus(); if (el.select) el.select(); } }
+}
+
+async function savePaper() {
+  const A = S.admin, P = S.paper, judge = P.judge, box = $('#pErr');
+  if (S.busy || !judge) return;
+  box.innerHTML = '';
+  const rows = paperRows(judge);
+  const stuck = rows.filter(r => r.state === 'partial' || r.state === 'wrong');
+  if (stuck.length) {
+    P.strict = true; P.grade = stuck[0].team.grade;
+    viewPaper();
+    $('#pErr').innerHTML = '<div class="alert err" role="alert">점수를 확인해 주세요: ' + stuck.map(r => esc(r.team.grade + '학년 ' + r.team.order + '번')).join(', ') +
+      '. 다섯 항목을 모두 채우고 배점을 넘지 않아야 합니다. 아직 채점하지 않은 팀은 줄 전체를 비워 두면 됩니다.</div>';
+    const first = $('.entry input.bad'); if (first) { first.focus(); first.select(); }
+    return;
+  }
+  const items = rows.filter(r => r.state === 'fresh' || r.state === 'changed')
+    .map(r => ({ team: r.team.id, grade: r.team.grade, order: r.team.order, scores: r.nums, comment: r.comment }));
+  if (!items.length) return;
+  const btn = $('#pSave');
+  S.busy = true; btn.disabled = true; btn.textContent = '저장하는 중';
+  let out;
+  try {
+    out = await api('submitBatch', { code: A.code, judge, items });
+    // 심사 서버가 옛 Code.gs 이면 한꺼번에 저장하는 요청을 모릅니다. 그때는 한 팀씩 차례로 보냅니다.
+    if (!out.ok && out.code === 'BAD_REQUEST') out = await savePaperEach(judge, items, btn);
+  } catch (e) { out = { ok: false, error: e.message }; }
+  S.busy = false;
+  mergeRecords(out.records);
+  if (!out.ok) {
+    viewPaper();
+    $('#pErr').innerHTML = '<div class="alert err" role="alert">저장하지 못했습니다. ' + esc(out.error || '') +
+      (out.records && out.records.length ? ' ' + out.records.length + '팀까지는 저장되었습니다.' : '') + ' 입력한 점수는 화면에 남아 있으니 다시 눌러 주세요.</div>';
+    $('#pErr').scrollIntoView({ block: 'center' });
+    return;
+  }
+  delete P.sets[judge]; P.strict = false;
+  viewPaper();
+  toast(judge + ' 채점관의 ' + items.length + '팀 점수를 저장했습니다.');
+}
+
+async function savePaperEach(judge, items, btn) {
+  const A = S.admin, done = [];
+  for (let i = 0; i < items.length; i++) {
+    btn.textContent = '저장하는 중 ' + (i + 1) + ' / ' + items.length;
+    let out;
+    try { out = await api('submit', Object.assign({ judge, code: A.data.judgeCode }, items[i])); }
+    catch (e) { out = { ok: false, error: e.message }; }
+    if (!out.ok) return { ok: false, error: out.error, records: done };
+    done.push(out.record);
+  }
+  return { ok: true, saved: done.length, records: done };
+}
+
+/* ---------- 관리자: 새 대회 시작 (해마다 다시 쓰기) ---------- */
+
+function openYearDlg() {
+  const A = S.admin, M = S.manage, d = $('#yearDlg');
+  const title = A.data.title || S.title, hit = title.match(/(?:19|20)\d{2}/);
+  const year = hit ? Number(hit[0]) : new Date().getFullYear();
+  const used = (A.archives || []).map(a => a.label);
+  const free = base => { let name = base, n = 2; while (used.indexOf(name) >= 0) name = base + '-' + n++; return name; };
+  const plan = keep => keep ? { label: free('시험 채점'), title } : { label: free(String(year)), title: hit ? title.replace(hit[0], String(year + 1)) : title };
+  const first = plan(false);
+  d.innerHTML = '<div class="sheet-head"><h2>새 대회 시작</h2><button class="btn" id="yClose">닫기</button></div><div class="sheet-body">' +
+    '<p class="p-help">지금 대회의 팀 ' + A.data.roster.length + '팀과 채점 기록 ' + A.data.records.length + '건을 보관하고, 빈 상태에서 새 대회를 시작합니다. ' +
+    '보관한 대회는 결과 화면에서 다시 볼 수 있습니다. 구글 시트에서는 지워지지 않고 시트 이름만 "보관 ' + esc(first.label) + ' 순서표"처럼 바뀝니다.</p>' +
+    (M && M.dirty ? '<div class="alert err" role="alert">팀 편집에 저장하지 않은 변경이 있습니다. 먼저 저장하거나 변경을 취소해 주세요.</div>' : '') +
+    '<label class="check"><input type="checkbox" id="yKeep"> <span>팀 목록은 그대로 두고 점수만 비우기<small>시험 채점을 지우고 본 심사를 시작할 때 고릅니다.</small></span></label>' +
+    '<label class="field"><span>보관 이름 (지금 대회를 부를 이름)</span><input id="yLabel" maxlength="20" autocomplete="off" value="' + esc(first.label) + '"></label>' +
+    '<label class="field"><span>새 대회 이름</span><input id="yTitle" maxlength="60" autocomplete="off" value="' + esc(first.title) + '"></label>' +
+    '<div id="yErr"></div><button class="btn primary" id="yGo"' + (M && M.dirty ? ' disabled' : '') + '>보관하고 새 대회 시작</button>' +
+    '<p class="entry-hint">심사 코드와 관리자 코드는 그대로입니다. 심사 코드는 팀 편집의 대회 설정에서 바꿀 수 있습니다.</p></div>';
+  const go = $('#yGo', d), err = $('#yErr', d);
+  const calm = () => { go.classList.remove('sure'); go.textContent = '보관하고 새 대회 시작'; };
+  let touched = false;
+  $('#yLabel', d).oninput = () => { touched = true; calm(); };
+  $('#yTitle', d).oninput = () => { touched = true; calm(); };
+  $('#yKeep', d).onchange = e => {
+    calm();
+    if (touched) return;                                  // 손으로 고친 이름은 건드리지 않는다
+    const p = plan(e.target.checked);
+    $('#yLabel', d).value = p.label; $('#yTitle', d).value = p.title;
+  };
+  $('#yClose', d).onclick = () => d.close();
+  go.onclick = async () => {
+    const label = oneLine($('#yLabel', d).value), newTitle = oneLine($('#yTitle', d).value), keepRoster = $('#yKeep', d).checked;
+    err.innerHTML = '';
+    const problem = !label ? '보관 이름을 적어 주세요.' : !newTitle ? '새 대회 이름을 적어 주세요.' : '';
+    if (problem) { err.innerHTML = '<div class="alert err" role="alert">' + problem + '</div>'; return; }
+    if (!go.classList.contains('sure')) { go.classList.add('sure'); go.textContent = '한 번 더 누르면 "' + label + '" 이름으로 보관합니다'; return; }
+    if (S.busy) return;
+    S.busy = true; go.disabled = true; go.textContent = '보관하는 중';
+    let out;
+    try { out = await api('archive', { code: A.code, label, newTitle, keepRoster }); }
+    catch (e) { out = { ok: false, error: e.message }; }
+    S.busy = false;
+    if (!out.ok) {
+      go.disabled = false; calm();
+      err.innerHTML = '<div class="alert err" role="alert">' + (out.code === 'BAD_REQUEST'
+        ? '심사 서버가 이 기능을 아직 모릅니다. Apps Script 의 Code.gs 를 새 파일로 바꾸고 새 버전으로 배포한 뒤 다시 해 주세요.'
+        : '보관하지 못했습니다. ' + esc(out.error || '')) + '</div>';
+      return;
+    }
+    A.data = out; A.at = out.at; A.archives = out.archives || []; A.arch = null; A.open = {};
+    A.agg = aggregate(out.roster, out.records, C);
+    S.title = out.title; S.paper = null;
+    d.close(); buildManage(); viewManage();
+    toast('"' + label + '" 이름으로 보관하고 새 대회를 시작했습니다.');
+  };
+  d.showModal();
+}
+
 /* ---------- 발표 화면 ---------- */
 
 function openStage() {
-  const agg = S.admin.agg;
+  const V = S.admin.arch || S.admin, agg = V.agg, stageTitle = S.admin.arch ? V.data.title : S.title;
   const grades = Object.keys(agg.grades).map(Number).sort((a, b) => a - b).map(g => agg.grades[g]).filter(g => g.scored > 0);
   if (!grades.length) return toast('아직 발표할 점수가 없습니다.');
   const steps = [{ type: 'open' }];
@@ -1138,7 +1629,7 @@ function openStage() {
   const el = document.createElement('div');
   el.className = 'stage'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', '수상 발표 화면'); el.tabIndex = -1;
   el.innerHTML = '<div class="stage-lines"></div><canvas></canvas>' +
-    '<div class="stage-top"><span>' + esc(S.title) + '</span><span><label><input type="checkbox" id="showScore" checked> 점수 보이기</label> <button id="closeStage">닫기</button></span></div>' +
+    '<div class="stage-top"><span>' + esc(stageTitle) + '</span><span><label><input type="checkbox" id="showScore" checked> 점수 보이기</label> <button id="closeStage">닫기</button></span></div>' +
     '<div class="stage-mid" aria-live="polite"></div>' +
     '<div class="stage-foot"><span id="stagePos"></span><span>화면을 누르거나 → 키로 다음, ← 키로 이전, Esc 로 닫기</span></div>';
   document.body.appendChild(el);
@@ -1153,7 +1644,7 @@ function openStage() {
     const s = steps[at], showScore = $('#showScore', el).checked;
     $('#stagePos', el).textContent = (at + 1) + ' / ' + steps.length;
     if (s.type === 'open') {
-      mid.innerHTML = '<div><p class="s-title rise">' + esc(S.title) + '</p><p class="s-sub">수상 발표</p></div>';
+      mid.innerHTML = '<div><p class="s-title rise">' + esc(stageTitle) + '</p><p class="s-sub">수상 발표</p></div>';
     } else if (s.type === 'grade') {
       mid.innerHTML = '<div><p class="s-grade pop">' + s.g.grade + '학년</p><p class="s-sub">' + s.g.scored + '팀이 무대에 올랐습니다</p></div>';
     } else if (s.type === 'award') {
@@ -1209,14 +1700,16 @@ function openStage() {
 
 /* ---------- 시작 ---------- */
 
-let ROUTE = '';   // '', '#result', '#manage'
+let ROUTE = '';   // '', '#result', '#manage', '#paper'
+const ADMIN_ROUTES = ['#result', '#manage', '#paper'];
 
 function route() {
   if (!GAS) ROUTE = location.hash;
   clearInterval(S.admin.timer); S.admin.timer = 0;
   const st = $('.stage'); if (st) st.remove();
-  ['#rubricDlg', '#pasteDlg'].forEach(id => { const d = $(id); if (d.open) d.close(); });
-  if (ROUTE === '#result' || ROUTE === '#manage') {
+  ['#rubricDlg', '#pasteDlg', '#sheetDlg', '#yearDlg'].forEach(id => { const d = $(id); if (d.open) d.close(); });
+  if (ADMIN_ROUTES.indexOf(ROUTE) >= 0) {
+    if (ROUTE !== '#result') S.admin.arch = null;            // 지난 대회는 결과 화면에서만 본다
     if (S.admin.data && S.admin.code) {                      // 이미 불러온 자료가 있으면 바로 보여 주고, 결과 화면은 새로 받아 온다
       showAdmin();
       if (ROUTE === '#result') loadResults(false);
@@ -1231,7 +1724,7 @@ function route() {
   if (sess && sess.judge && sess.code) { S.judge = sess.judge; S.code = sess.code; viewGate(); enterJudge(sess.judge, sess.code, true); }
   else viewGate();
 }
-window.addEventListener('beforeunload', e => { if (S.manage && S.manage.dirty) { e.preventDefault(); e.returnValue = ''; } });
+window.addEventListener('beforeunload', e => { if ((S.manage && S.manage.dirty) || paperDirty()) { e.preventDefault(); e.returnValue = ''; } });
 
 if (GAS) {
   // Apps Script 화면은 틀(iframe) 안에서 열려 주소의 # 을 직접 쓸 수 없으므로, 화면 안의 이동은 직접 처리한다.
@@ -1245,7 +1738,7 @@ if (GAS) {
   });
   const start = loc => {
     const view = loc && (loc.hash || (loc.parameter && loc.parameter.view) || '');
-    ROUTE = view === 'result' || view === 'manage' ? '#' + view : '';
+    ROUTE = ADMIN_ROUTES.indexOf('#' + view) >= 0 ? '#' + view : '';
     route();
   };
   try { google.script.url.getLocation(start); } catch (err) { start(null); }

@@ -11,13 +11,16 @@
  *   순서표    : 팀ID | 학년 | 순서 | 팀원 | 곡 제목   ← 웹앱의 "팀 편집"에서 저장하면 채워짐
  *   심사기록  : 채점관 한 명이 한 팀을 채점할 때마다 한 줄 (다시 제출하면 그 줄을 고침)
  *   심사 집계 N학년 : 자동으로 다시 쓰이는 순위표 (직접 고치지 않음)
+ *   보관 목록 / 보관 <이름> … : 웹앱의 "새 대회 시작"으로 넘겨 둔 지난 대회 (이름만 바뀐 원래 시트)
  */
 
 // 다른 스프레드시트에 기록하려면 그 시트의 ID 를 넣으세요. 비워 두면 이 스크립트가 붙어 있는 시트를 씁니다.
 var SPREADSHEET_ID = '';
 
-var SHEETS = { config: '설정', roster: '순서표', records: '심사기록', summary: '심사 집계 ' };
+var SHEETS = { config: '설정', roster: '순서표', records: '심사기록', summary: '심사 집계 ',
+  archive: '보관 ', archiveList: '보관 목록' };
 var ROSTER_HEAD = ['팀ID', '학년', '순서', '팀원', '곡 제목'];
+var ARCHIVE_HEAD = ['보관 이름', '대회명', '보관일시', '팀 수', '채점 기록 수'];
 
 /**
  * 과학송 경연대회 채점 기준(루브릭). 채점 화면, 인쇄용 표, 서버 점수 검증이 모두 이 표를 씁니다.
@@ -213,7 +216,7 @@ function setup() {
     cfg = ss.insertSheet(SHEETS.config);
     cfg.getRange(1, 1, 4, 3).setValues([
       ['항목', '값', '설명'],
-      ['대회명', '2026 과학송 경연대회', '채점 화면과 발표 화면 위에 나오는 이름'],
+      ['대회명', new Date().getFullYear() + ' 과학송 경연대회', '채점 화면과 발표 화면 위에 나오는 이름'],
       ['심사 코드', randomDigits_(6), '채점관에게 알려 주는 코드'],
       ['관리자 코드', randomDigits_(8), '결과 화면과 팀 편집을 여는 코드 (채점관에게 알리지 않음)']
     ]);
@@ -315,11 +318,16 @@ function handle_(req) {
         return submit_(req);
       case 'results':
         requireCode_(req.code, cfg.adminCode, '관리자 코드');
-        return { ok: true, title: cfg.title, judgeCode: cfg.judgeCode, appUrl: appUrl_(), roster: readRoster_(),
-          records: readRecords_(), at: new Date().toISOString() };
+        return results_(req, cfg);
       case 'saveRoster':
         requireCode_(req.code, cfg.adminCode, '관리자 코드');
         return saveRoster_(req, cfg);
+      case 'submitBatch':
+        requireCode_(req.code, cfg.adminCode, '관리자 코드');
+        return submitBatch_(req);
+      case 'archive':
+        requireCode_(req.code, cfg.adminCode, '관리자 코드');
+        return archive_(req, cfg);
       default:
         fail_('BAD_REQUEST', '알 수 없는 요청입니다.');
     }
@@ -330,16 +338,8 @@ function handle_(req) {
 
 function submit_(req) {
   var judge = cleanJudge_(req.judge);
-  var scores = req.scores;
-  if (!Array.isArray(scores) || scores.length !== CRITERIA.length) fail_('BAD_SCORE', '다섯 항목을 모두 채점해 주세요.');
-  scores = scores.map(function (v, i) {
-    var n = Number(v), c = CRITERIA[i];
-    if (v === null || v === '' || !isFinite(n) || Math.floor(n) !== n || n < 0 || n > c.max) {
-      fail_('BAD_SCORE', c.name + ' 점수는 0~' + c.max + ' 사이의 정수여야 합니다.');
-    }
-    return n;
-  });
-  var comment = String(req.comment == null ? '' : req.comment).replace(/\s+/g, ' ').trim().slice(0, 300);
+  var scores = checkScores_(req.scores, '');
+  var comment = cleanComment_(req.comment);
 
   // 팀은 고유 ID로 찾는다. ID 없이 온 요청(옛 화면)은 학년과 순서로 찾는다.
   var id = cleanText_(req.team), team = null;
@@ -348,9 +348,8 @@ function submit_(req) {
   });
   if (!team) fail_('NO_TEAM', '순서표에 없는 팀입니다. 화면을 새로 고친 뒤 다시 해 주세요.');
 
-  var total = 0; scores.forEach(function (s) { total += s; });
   var now = new Date();
-  var row = [now, team.id, team.grade, team.order, team.members, team.title, judge].concat(scores).concat([total, comment]);
+  var row = recordRow_(now, team, judge, scores, comment);
 
   var lock = LockService.getScriptLock();
   if (!lock.tryLock(25000)) fail_('BUSY', '다른 요청을 처리하는 중입니다. 잠시 뒤 다시 눌러 주세요.');
@@ -372,6 +371,182 @@ function submit_(req) {
   }
   return { ok: true, updated: !!hit,
     record: { team: team.id, grade: team.grade, order: team.order, judge: judge, scores: scores, comment: comment, at: now.toISOString() } };
+}
+
+function checkScores_(scores, who) {
+  if (!Array.isArray(scores) || scores.length !== CRITERIA.length) fail_('BAD_SCORE', who + '다섯 항목을 모두 채점해 주세요.');
+  return scores.map(function (v, i) {
+    var n = Number(v), c = CRITERIA[i];
+    if (v === null || v === '' || !isFinite(n) || Math.floor(n) !== n || n < 0 || n > c.max) {
+      fail_('BAD_SCORE', who + c.name + ' 점수는 0~' + c.max + ' 사이의 정수여야 합니다.');
+    }
+    return n;
+  });
+}
+
+function cleanComment_(v) { return cleanText_(v).slice(0, 300); }
+
+function recordRow_(now, team, judge, scores, comment) {
+  var total = 0; scores.forEach(function (s) { total += s; });
+  return [now, team.id, team.grade, team.order, team.members, team.title, judge].concat(scores).concat([total, comment]);
+}
+
+/**
+ * 종이 채점표를 옮겨 적을 때: 채점관 한 명의 여러 팀 점수를 한 번에 저장합니다. (관리자 코드)
+ * 하나라도 잘못된 점수가 있으면 아무것도 저장하지 않습니다.
+ */
+function submitBatch_(req) {
+  var judge = cleanJudge_(req.judge);
+  var items = req.items;
+  if (!Array.isArray(items) || !items.length || items.length > 300) fail_('BAD_BATCH', '저장할 점수가 없습니다.');
+  var byId = {}, seen = {};
+  readRoster_().forEach(function (t) { byId[t.id] = t; });
+  var list = items.map(function (it) {
+    it = it || {};
+    var team = byId[cleanText_(it.team)];
+    if (!team) fail_('NO_TEAM', '순서표에 없는 팀이 있습니다. 화면을 새로 고친 뒤 다시 해 주세요.');
+    var who = team.grade + '학년 ' + team.order + '번: ';
+    if (seen[team.id]) fail_('BAD_BATCH', who + '같은 팀이 두 번 들어 있습니다.');
+    seen[team.id] = true;
+    return { team: team, scores: checkScores_(it.scores, who), comment: cleanComment_(it.comment) };
+  });
+
+  var now = new Date(), updated = 0;
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(25000)) fail_('BUSY', '다른 요청을 처리하는 중입니다. 잠시 뒤 다시 눌러 주세요.');
+  try {
+    var sh = recordSheet_();
+    var last = sh.getLastRow(), where = {}, fresh = [];
+    if (last > 1) {
+      sh.getRange(2, 1, last - 1, 7).getValues().forEach(function (k, i) {
+        var id = cleanText_(k[1]);
+        if (cleanText_(k[6]) === judge && !where[id]) where[id] = i + 2;
+      });
+    }
+    list.forEach(function (x) {
+      var row = recordRow_(now, x.team, judge, x.scores, x.comment);
+      if (where[x.team.id]) { sh.getRange(where[x.team.id], 1, 1, row.length).setValues([row]); updated++; }
+      else fresh.push(row);
+    });
+    if (fresh.length) sh.getRange(last + 1, 1, fresh.length, fresh[0].length).setValues(fresh);
+    SpreadsheetApp.flush();
+    try { writeSummary_(); } catch (err) { /* 집계 시트 갱신 실패가 저장을 막지 않게 */ }
+  } finally {
+    lock.releaseLock();
+  }
+  return { ok: true, saved: list.length, updated: updated,
+    records: list.map(function (x) {
+      return { team: x.team.id, grade: x.team.grade, order: x.team.order, judge: judge, scores: x.scores,
+        comment: x.comment, at: now.toISOString() };
+    }) };
+}
+
+/** 결과 화면에 보낼 자료. req.archive 에 보관 이름이 오면 그 지난 대회의 자료를 보냅니다. */
+function results_(req, cfg) {
+  var archives = readArchives_();
+  var out = { ok: true, title: cfg.title, judgeCode: cfg.judgeCode, appUrl: appUrl_(), archives: archives,
+    at: new Date().toISOString() };
+  var label = cleanText_(req.archive);
+  if (!label) {
+    out.roster = readRoster_(); out.records = readRecords_();
+    return out;
+  }
+  var hit = null;
+  archives.forEach(function (a) { if (a.label === label) hit = a; });
+  if (!hit) fail_('NO_ARCHIVE', '보관된 대회를 찾지 못했습니다: ' + label);
+  out.archive = label; out.title = hit.title; out.at = hit.at;
+  out.roster = readRoster_(archiveName_(label, SHEETS.roster));
+  out.records = readRecords_(archiveName_(label, SHEETS.records));
+  return out;
+}
+
+/* ---------- 대회 보관 (해마다 다시 쓰기) ---------- */
+
+function archiveName_(label, name) { return SHEETS.archive + label + ' ' + name; }
+
+function archiveSheet_() {
+  var ss = ss_(), sh = ss.getSheetByName(SHEETS.archiveList);
+  if (!sh) {
+    sh = ss.insertSheet(SHEETS.archiveList);
+    sh.getRange(1, 1, 1, ARCHIVE_HEAD.length).setValues([ARCHIVE_HEAD]);
+    styleHead_(sh, ARCHIVE_HEAD.length);
+    sh.getRange('A:B').setNumberFormat('@');
+    sh.getRange('C:C').setNumberFormat('yyyy-mm-dd hh:mm:ss');
+    sh.setColumnWidth(2, 260); sh.setColumnWidth(3, 160);
+  }
+  return sh;
+}
+
+/** 보관해 둔 대회 목록 (최근에 보관한 것이 앞) */
+function readArchives_() {
+  var sh = ss_().getSheetByName(SHEETS.archiveList);
+  if (!sh || sh.getLastRow() < 2) return [];
+  var out = [];
+  sh.getRange(2, 1, sh.getLastRow() - 1, ARCHIVE_HEAD.length).getValues().forEach(function (r) {
+    var label = cleanText_(r[0]);
+    if (!label) return;
+    out.push({ label: label, title: cleanText_(r[1]) || label,
+      at: r[2] instanceof Date ? r[2].toISOString() : String(r[2]),
+      teams: Number(r[3]) || 0, records: Number(r[4]) || 0 });
+  });
+  return out.reverse();
+}
+
+/**
+ * 지금 대회를 보관하고 빈 상태로 새 대회를 시작합니다. (관리자 코드)
+ * 순서표, 심사기록, 집계 시트는 지우지 않고 이름만 "보관 <이름> …" 으로 바꿔 둡니다.
+ * req.keepRoster 가 true 면 팀 목록은 새 대회에 그대로 옮기고 점수만 비웁니다.
+ */
+function archive_(req, cfg) {
+  var label = cleanText_(req.label);
+  if (!/^[0-9A-Za-z가-힣 _-]{1,20}$/.test(label)) {
+    fail_('BAD_ARCHIVE', '보관 이름은 한글, 영문, 숫자로 20자까지 적어 주세요. (예: ' + new Date().getFullYear() + ')');
+  }
+  var newTitle = req.newTitle == null ? cfg.title : cleanText_(req.newTitle).slice(0, 60);
+  if (!newTitle) fail_('BAD_CONFIG', '새 대회 이름을 입력해 주세요.');
+  var keepRoster = req.keepRoster === true;
+
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(25000)) fail_('BUSY', '다른 요청을 처리하는 중입니다. 잠시 뒤 다시 눌러 주세요.');
+  try {
+    var ss = ss_();
+    var roster = readRoster_(), records = readRecords_();
+    if (!roster.length && !records.length) {
+      fail_('NOTHING', '보관할 팀이나 점수가 없습니다. 대회 이름만 바꾸려면 대회 설정에서 고친 뒤 저장해 주세요.');
+    }
+    var moves = [SHEETS.roster, SHEETS.records];
+    ss.getSheets().forEach(function (sh) {
+      var name = sh.getName();
+      if (name.indexOf(SHEETS.summary) === 0 && sh.getLastRow() > 0) moves.push(name);
+    });
+    var taken = readArchives_().some(function (a) { return a.label === label; }) ||
+      moves.some(function (name) { return !!ss.getSheetByName(archiveName_(label, name)); });
+    if (taken) fail_('DUP_ARCHIVE', '"' + label + '" 이라는 보관이 이미 있습니다. 다른 이름을 적어 주세요.');
+
+    moves.forEach(function (name) {
+      var sh = ss.getSheetByName(name);
+      if (sh) sh.setName(archiveName_(label, name));
+    });
+    var list = archiveSheet_();
+    list.getRange(list.getLastRow() + 1, 1, 1, ARCHIVE_HEAD.length)
+      .setValues([[label, cfg.title, new Date(), roster.length, records.length]]);
+
+    var fresh = rosterSheet_();          // 이름이 바뀌었으므로 빈 시트가 새로 만들어진다
+    recordSheet_();
+    if (keepRoster && roster.length) {
+      fresh.getRange(2, 1, roster.length, ROSTER_HEAD.length).setValues(roster.map(function (t) {
+        return [t.id, t.grade, t.order, t.members, t.title];
+      }));
+    }
+    setConfig_('대회명', newTitle);
+    SpreadsheetApp.flush();
+    try { writeSummary_(); } catch (err) { /* 집계 시트 갱신 실패가 보관을 막지 않게 */ }
+  } finally {
+    lock.releaseLock();
+  }
+  var now = readConfig_();
+  return { ok: true, label: label, title: now.title, judgeCode: now.judgeCode, appUrl: appUrl_(),
+    roster: readRoster_(), records: readRecords_(), archives: readArchives_(), at: new Date().toISOString() };
 }
 
 /** 웹앱의 "팀 편집"에서 보낸 팀 목록으로 순서표를 통째로 다시 씁니다. */
@@ -454,8 +629,8 @@ function rosterSheet_() {
   return sh;
 }
 
-function readRoster_() {
-  var sh = ss_().getSheetByName(SHEETS.roster);
+function readRoster_(sheetName) {
+  var sh = ss_().getSheetByName(sheetName || SHEETS.roster);
   if (!sh || sh.getLastRow() < 2) return [];
   var out = [], seen = {};
   sh.getRange(2, 1, sh.getLastRow() - 1, ROSTER_HEAD.length).getValues().forEach(function (r) {
@@ -483,8 +658,8 @@ function recordSheet_() {
   return sh;
 }
 
-function readRecords_() {
-  var sh = ss_().getSheetByName(SHEETS.records);
+function readRecords_(sheetName) {
+  var sh = ss_().getSheetByName(sheetName || SHEETS.records);
   if (!sh || sh.getLastRow() < 2) return [];
   var n = CRITERIA.length;
   return sh.getRange(2, 1, sh.getLastRow() - 1, RECORD_HEAD.length).getValues().map(function (r) {
