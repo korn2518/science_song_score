@@ -12,13 +12,14 @@
  *   심사기록  : 채점관 한 명이 한 팀을 채점할 때마다 한 줄 (다시 제출하면 그 줄을 고침)
  *   심사 집계 N학년 : 자동으로 다시 쓰이는 순위표 (직접 고치지 않음)
  *   보관 목록 / 보관 <이름> … : 웹앱의 "새 대회 시작"으로 넘겨 둔 지난 대회 (이름만 바뀐 원래 시트)
+ *   삭제된 기록 : 관리자 화면에서 지운 점수가 옮겨지는 곳 (필요하면 여기서 되살림)
  */
 
 // 다른 스프레드시트에 기록하려면 그 시트의 ID 를 넣으세요. 비워 두면 이 스크립트가 붙어 있는 시트를 씁니다.
 var SPREADSHEET_ID = '';
 
 var SHEETS = { config: '설정', roster: '순서표', records: '심사기록', summary: '심사 집계 ',
-  archive: '보관 ', archiveList: '보관 목록' };
+  archive: '보관 ', archiveList: '보관 목록', trash: '삭제된 기록' };
 var ROSTER_HEAD = ['팀ID', '학년', '순서', '팀원', '곡 제목'];
 var ARCHIVE_HEAD = ['보관 이름', '대회명', '보관일시', '팀 수', '채점 기록 수'];
 
@@ -328,6 +329,9 @@ function handle_(req) {
       case 'archive':
         requireCode_(req.code, cfg.adminCode, '관리자 코드');
         return archive_(req, cfg);
+      case 'deleteRecords':
+        requireCode_(req.code, cfg.adminCode, '관리자 코드');
+        return deleteRecords_(req);
       default:
         fail_('BAD_REQUEST', '알 수 없는 요청입니다.');
     }
@@ -441,6 +445,51 @@ function submitBatch_(req) {
     }) };
 }
 
+/**
+ * 잘못 들어간 점수를 지웁니다. (관리자 코드)
+ * req.team 이 있으면 그 채점관의 그 팀 점수 하나, req.all 이 true 면 그 채점관의 점수 전부.
+ * 지운 줄은 "삭제된 기록" 시트로 옮겨 두므로 시트에서 되살릴 수 있습니다.
+ */
+function deleteRecords_(req) {
+  var judge = cleanJudge_(req.judge), team = cleanText_(req.team);
+  var all = req.all === true && !team;
+  if (!team && !all) fail_('BAD_DELETE', '지울 팀을 알 수 없습니다. 화면을 새로 고친 뒤 다시 해 주세요.');
+  var hits = [];
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(25000)) fail_('BUSY', '다른 요청을 처리하는 중입니다. 잠시 뒤 다시 눌러 주세요.');
+  try {
+    var sh = recordSheet_(), last = sh.getLastRow(), width = RECORD_HEAD.length, keep = [];
+    var data = last > 1 ? sh.getRange(2, 1, last - 1, width).getValues() : [];
+    data.forEach(function (r) {
+      if (cleanText_(r[6]) === judge && (all || cleanText_(r[1]) === team)) hits.push(r); else keep.push(r);
+    });
+    if (!hits.length) fail_('NO_RECORD', '지울 점수를 찾지 못했습니다. 화면을 새로 고친 뒤 다시 확인해 주세요.');
+    var bin = trashSheet_(), now = new Date();
+    bin.getRange(bin.getLastRow() + 1, 1, hits.length, width + 1)
+      .setValues(hits.map(function (r) { return r.concat([now]); }));              // 먼저 옮겨 적고 나서 지운다
+    // 남길 줄을 위로 당겨 쓰고 남는 줄은 빈칸으로 채운다. 한 번에 써서 중간에 끊겨도 기록이 사라지지 않게 한다.
+    var blank = RECORD_HEAD.map(function () { return ''; });
+    sh.getRange(2, 1, data.length, width).setValues(keep.concat(hits.map(function () { return blank; })));
+    SpreadsheetApp.flush();
+    try { writeSummary_(); } catch (err) { /* 집계 시트 갱신 실패가 삭제를 막지 않게 */ }
+  } finally {
+    lock.releaseLock();
+  }
+  return { ok: true, deleted: hits.length, records: readRecords_() };
+}
+
+function trashSheet_() {
+  var ss = ss_(), sh = ss.getSheetByName(SHEETS.trash);
+  if (!sh) {
+    var head = RECORD_HEAD.concat(['삭제일시']);
+    sh = ss.insertSheet(SHEETS.trash);
+    sh.getRange(1, 1, 1, head.length).setValues([head]);
+    styleHead_(sh, head.length);
+    sh.getRange('A:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
+  }
+  return sh;
+}
+
 /** 결과 화면에 보낼 자료. req.archive 에 보관 이름이 오면 그 지난 대회의 자료를 보냅니다. */
 function results_(req, cfg) {
   var archives = readArchives_();
@@ -515,6 +564,8 @@ function archive_(req, cfg) {
       fail_('NOTHING', '보관할 팀이나 점수가 없습니다. 대회 이름만 바꾸려면 대회 설정에서 고친 뒤 저장해 주세요.');
     }
     var moves = [SHEETS.roster, SHEETS.records];
+    var bin = ss.getSheetByName(SHEETS.trash);
+    if (bin && bin.getLastRow() > 1) moves.push(SHEETS.trash);     // 지운 점수도 그 대회와 함께 보관
     ss.getSheets().forEach(function (sh) {
       var name = sh.getName();
       if (name.indexOf(SHEETS.summary) === 0 && sh.getLastRow() > 0) moves.push(name);
